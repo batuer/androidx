@@ -1,0 +1,62 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion rootProject.ext.android["compileSdkVersion"]
+
+    defaultConfig {
+        applicationId "com.gusi.androidx"
+        minSdkVersion rootProject.ext.android["minSdkVersion"]
+        targetSdkVersion rootProject.ext.android["targetSdkVersion"]
+        versionCode 1
+        versionName "1.0"
+        vectorDrawables.useSupportLibrary = true
+    }
+    buildTypes {
+        debug {
+            buildConfigField 'String', 'BASE_URL', '"http://119.27.187.153/"'
+        }
+        release {
+            buildConfigField 'String', 'BASE_URL', '"http://119.27.187.153/"'
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    tasks.whenTaskAdded {
+        task ->
+            if (task.name.contains("lint")
+                    || task.name.contains("clean")
+                    || task.name.contains("Aidl")
+                    || task.name.contains("mockableAndroidJar")
+                    || task.name.contains("UnitTest")
+                    || task.name.contains("AndroidTest")
+                    || task.name.contains("Ndk")
+                    || task.name.contains("Jni")) {
+                task.enabled = false
+            }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation rootProject.ext.dependencies["appcompat"]
+    implementation rootProject.ext.dependencies["constraintlayout"]
+    implementation rootProject.ext.dependencies["material"]
+    implementation rootProject.ext.dependencies["butterknife"]
+    implementation rootProject.ext.dependencies["utilcodex"]
+    implementation rootProject.ext.dependencies["loadingdialog"]
+    implementation rootProject.ext.dependencies["dagger"]
+    implementation rootProject.ext.dependencies["rxandroid"]
+    implementation rootProject.ext.dependencies["rxjava"]
+    implementation rootProject.ext.dependencies["retrofit2"]
+    implementation rootProject.ext.dependencies["retrofit2_gson"]
+    implementation rootProject.ext.dependencies["retrofit2_rxjava"]
+    implementation rootProject.ext.dependencies["okhttp"]
+    implementation rootProject.ext.dependencies["okhttp_log"]
+    implementation rootProject.ext.dependencies["bugly"]
+    annotationProcessor rootProject.ext.dependencies["butterknife-compiler"]
+    annotationProcessor rootProject.ext.dependencies["dagger-compiler"]
+}
