@@ -21,5 +21,4 @@
     <style name="ToolbarThemeWhite" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="ToolbarThemeBlack.OverFlowMenuTheme" parent="ThemeOverlay.AppCompat.Light" />
-
 </resources>
