@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
     android:background="@color/colorPrimary"
-    android:fitsSystemWindows="true"
     android:theme="@style/ToolbarThemeWhite"
     app:layout_collapseMode="pin"
     app:layout_scrollFlags="scroll|enterAlways"
