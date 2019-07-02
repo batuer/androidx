@@ -12,11 +12,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".module.preference.PreferenceActivity"
+            android:label="@string/preference"
+            ></activity>
         <activity
             android:name=".module.constraintlayout.ConstraintlayoutActivity"
-            android:label="@string/constraint"></activity>
-        <activity
-            android:name=".module.MainListActivity">
+            android:label="@string/constraint" />
+        <activity android:name=".module.MainListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

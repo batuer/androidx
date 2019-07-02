@@ -46,6 +46,8 @@ public class ConstraintlayoutActivity extends BaseActivity {
         titles.add("Placeholder");
         titles.add("Guideline");
         titles.add("Layer ");
+        titles.add("CircularReveal ");
+        titles.add("Flow ");
         fragments.add(ConstraintFragment.newInstance(R.layout.fragment_constraint_relative));
         fragments.add(ConstraintFragment.newInstance(R.layout.fragment_constraint_angle));
         fragments.add(ConstraintFragment.newInstance(R.layout.fragment_constraint_margin));
@@ -58,6 +60,8 @@ public class ConstraintlayoutActivity extends BaseActivity {
         fragments.add(ConstraintPlacrholdrFragment.newInstance(R.layout.fragment_constraint_placeholder));
         fragments.add(ConstraintFragment.newInstance(R.layout.fragment_constraint_guide));
         fragments.add(ConstraintLayerFragment.newInstance(R.layout.fragment_constraint_layer));
+        fragments.add(CirclularRevealFragment.Companion.newInstance());
+        fragments.add(FlowFragment.Companion.newInstance());
         mViewPager.setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {

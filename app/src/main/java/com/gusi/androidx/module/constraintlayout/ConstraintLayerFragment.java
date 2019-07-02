@@ -58,7 +58,6 @@ public class ConstraintLayerFragment extends BaseFragment {
     @OnClick(R.id.button8)
     public void btn8Layer() {
         ValueAnimator anim = ValueAnimator.ofFloat(0f, 360f);
-        anim.setDuration(300);
         anim.addUpdateListener(animation -> {
             float angle = (float) animation.getAnimatedValue();
             mLayer.setRotation(angle);
@@ -72,5 +71,4 @@ public class ConstraintLayerFragment extends BaseFragment {
         anim.setDuration(4000);
         anim.start();
     }
-
 }
