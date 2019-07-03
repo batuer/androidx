@@ -3,4 +3,21 @@
     <string name="action_settings">Settings</string>
     <string name="constraint">constraint</string>
     <string name="preference">preference</string>
+    <string name="preference_fragment">preference_fragment</string>
+
+
+    <string name="pref_about_phone_sum">aboutPhoneSum</string>
+    <string name="pref_about_phone_tittle">aboutPhoneTitle</string>
+    <string name="pref_ringtone_tittle">ringtoneTitle</string>
+    <string name="pref_ringtone_sum">ringToneSum</string>
+    <string name="preference_blue_sum">preferenceBlueSum</string>
+    <string name="preference_blue_tittle">preferenceBlueTitle</string>
+    <string name="pref_fav_category_tittle">favCategoryTitle</string>
+    <string name="pref_ed_name_sum">edNameSum</string>
+    <string name="pref_ed_name_tittle">edNameTitle</string>
+    <string name="pref_fav_title">favTitle</string>
+    <string name="pref_fav_sum">favSum</string>
+    <string name="pref_fav_contact_tittle">favContactTitle</string>
+    <string name="pref_voicemail_tittle">voicemailTitle</string>
+    <string name="pref_voicemail_sum">voicemailSum</string>
 </resources>

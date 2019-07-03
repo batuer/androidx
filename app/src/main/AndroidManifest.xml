@@ -12,9 +12,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".module.preference.PreferenceActivity"
-            android:label="@string/preference"
+        <activity android:name=".module.preference.PreferenceFragmentActivity"
+            android:label="@string/preference_fragment"
             ></activity>
+        <activity
+            android:name=".module.preference.PreferenceActivity"
+            android:label="@string/preference" />
         <activity
             android:name=".module.constraintlayout.ConstraintlayoutActivity"
             android:label="@string/constraint" />
