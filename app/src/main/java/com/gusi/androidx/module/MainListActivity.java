@@ -6,7 +6,6 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -39,7 +38,6 @@ public class MainListActivity extends ListActivity {
                 TextView tv = (TextView) super.getView(position, convertView, parent);
                 int labelRes = ((ActivityInfo) getItem(position)).labelRes;
                 tv.setText(labelRes);
-                Log.w("Fire", "MainListActivity:40行:" + labelRes);
                 return tv;
             }
         };

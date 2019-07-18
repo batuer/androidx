@@ -1,5 +1,6 @@
 package com.gusi.androidx.module.preference;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.util.Log;
@@ -22,6 +23,7 @@ public class PreferenceActivity extends android.preference.PreferenceActivity im
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preference1);
+
     }
 
     @Override
@@ -36,19 +38,23 @@ public class PreferenceActivity extends android.preference.PreferenceActivity im
 
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
-        Log.w("Fire", "PreferenceActivity:38行:" + preference.toString());
-        Log.e("Fire", "PreferenceActivity:39行:" + newValue);
         return false;
     }
 
     @Override
     public boolean onPreferenceClick(Preference preference) {
-        Log.w("Fire", "PreferenceActivity:42行:" + preference.toString());
         return false;
     }
 
     @Override
     public void onBuildHeaders(List<Header> target) {
         super.onBuildHeaders(target);
+    }
+
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+        Dialog dialog = getPreferenceScreen().getDialog();
+        Log.w("Fire", "PreferenceActivity:58行:" + dialog);
     }
 }

@@ -1,10 +1,6 @@
 <resources>
     <string name="app_name">Androidx</string>
     <string name="action_settings">Settings</string>
-    <string name="constraint">constraint</string>
-    <string name="preference">preference</string>
-    <string name="preference_fragment">preference_fragment</string>
-
 
     <string name="pref_about_phone_sum">aboutPhoneSum</string>
     <string name="pref_about_phone_tittle">aboutPhoneTitle</string>
@@ -20,4 +16,12 @@
     <string name="pref_fav_contact_tittle">favContactTitle</string>
     <string name="pref_voicemail_tittle">voicemailTitle</string>
     <string name="pref_voicemail_sum">voicemailSum</string>
+
+    <string name="round1" translatable="false">m 109.0,27.0 h 0.0 c 45.29,0.0,82.0,36.71,82.0,82.0 v 0.0 c 0.0,45.29,-36.71,82.0,-82.0,82.0 h 0.0 c -45.29,0.0,-82.0,-36.71,-82.0,-82.0 v 0.0 c 0.0,-45.29,36.71,-82.0,82.0,-82.0 L 109.0,27.0z</string>
+    <string name="square1" translatable="false">m 80.0,69.0 h 60.0 c 5.52,0.0,10.0,4.48,10.0,10.0 v 60.0 c 0.0,5.52,-4.48,10.0,-10.0,10.0 h -60.0 c -5.52,0.0,-10.0,-4.48,-10.0,-10.0 v -60.0 c 0.0,-5.52,4.48,-10.0,10.0,-10.0 L 80.0,69.0z</string>
+
+    <string name="constraint">constraint</string>
+    <string name="preference">preference</string>
+    <string name="preference_fragment">preference_fragment</string>
+    <string name="vector">vector</string>
 </resources>
