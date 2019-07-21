@@ -1,11 +1,10 @@
 package com.gusi.androidx.base;
 
-
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
 /**
- * @author ylw   2018/6/21 17:34
+ * @author ylw 2018/6/21 17:34
  * @Des
  */
 public class BasePresenter<V extends IBaseView> implements IBasePresenter<V> {
@@ -29,7 +28,6 @@ public class BasePresenter<V extends IBaseView> implements IBasePresenter<V> {
         mView = null;
         unSubscribe();
     }
-
 
     public void unSubscribe() {
         if (compositeDisposable != null) {
@@ -59,6 +57,10 @@ public class BasePresenter<V extends IBaseView> implements IBasePresenter<V> {
 
     public void showLoading(CharSequence msg) {
         showLoading(msg, false);
+    }
+
+    public void showLoading() {
+        showLoading("Loading", false);
     }
 
     public void hideLoading() {

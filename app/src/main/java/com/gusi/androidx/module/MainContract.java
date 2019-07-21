@@ -1,7 +1,11 @@
 package com.gusi.androidx.module;
 
+import androidx.core.util.Pair;
+
 import com.gusi.androidx.base.IBasePresenter;
 import com.gusi.androidx.base.IBaseView;
+
+import java.util.List;
 
 /**
  * @author Ylw
@@ -9,10 +13,10 @@ import com.gusi.androidx.base.IBaseView;
  */
 public interface MainContract {
     interface View extends IBaseView {
-
+        void showRegistration(List<Pair<String, String>> pairList);
     }
 
     interface Presenter extends IBasePresenter<View> {
-
+        void getRegistration(String areaUrl);
     }
 }

@@ -1,12 +1,16 @@
 package com.gusi.androidx.base;
 
+import android.app.ListActivity;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewStub;
 
-import androidx.annotation.LayoutRes;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.blankj.utilcode.util.ToastUtils;
@@ -19,60 +23,42 @@ import com.gusi.loadingdialog.LoadingDialog;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
-
 /**
- * @Author ylw 2018/6/21 17:31
+ * @author Ylw
+ * @since 2019/7/21 16:29
  */
-public abstract class BaseActivity<P extends BasePresenter> extends AppCompatActivity implements IBaseView {
+public abstract class BaseListActivity<P extends BasePresenter> extends ListActivity implements IBaseView {
 
-    private Unbinder mBind;
-    @Nullable
-    @BindView(R.id.toolbar)
-    protected Toolbar mToolbar;
     @Inject
     protected P mPresenter;
     private LoadingDialog mLoadingDialog;
-
+    private Toolbar mToolBar;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(getLayout());
-        mBind = ButterKnife.bind(this);
         initInject();
         if (mPresenter != null) {
             mPresenter.attachView(this);
         }
-        initView();
-        initData();
     }
 
-    /**
-     * get layout
-     *
-     * @return
-     */
-    @LayoutRes
-    protected abstract int getLayout();
-
-    /**
-     * inject
-     */
     protected abstract void initInject();
-
-    protected void initView() {}
-
-    protected void initData() {}
 
     /**
      * 初始化 Toolbar
      */
-    public void initToolBar(Toolbar toolbar, boolean homeAsUpEnabled, String title) {
-        toolbar.setTitle(title);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(homeAsUpEnabled);
+    public void initToolBar(boolean homeAsUpEnabled, String title) {
+        View content = findViewById(android.R.id.content);
+        ViewStub viewStub = (ViewStub)((ViewGroup)content.getParent()).getChildAt(0);
+        if (viewStub != null) {
+            if (mToolBar == null) {
+                viewStub.setLayoutResource(R.layout.layout_toolbar);
+                mToolBar = (Toolbar)viewStub.inflate();
+            }
+            mToolBar.setTitle(title);
+            Drawable navigationIcon = mToolBar.getNavigationIcon();
+            Log.w("Fire", "BaseListActivity:59行:" + navigationIcon);
+        }
     }
 
     @Override
@@ -127,9 +113,6 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
         mLoadingDialog = null;
         if (mPresenter != null) {
             mPresenter.detachView();
-        }
-        if (mBind != null) {
-            mBind.unbind();
         }
         super.onDestroy();
     }

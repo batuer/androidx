@@ -24,4 +24,7 @@
     <string name="preference">preference</string>
     <string name="preference_fragment">preference_fragment</string>
     <string name="vector">vector</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

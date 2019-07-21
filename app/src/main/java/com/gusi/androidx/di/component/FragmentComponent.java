@@ -3,6 +3,7 @@ package com.gusi.androidx.di.component;
 
 import com.gusi.androidx.di.module.FragmentModule;
 import com.gusi.androidx.di.scope.FragmentScope;
+import com.gusi.androidx.module.areastate.AreaStateFragment;
 
 import dagger.Component;
 
@@ -14,4 +15,5 @@ import dagger.Component;
 @Component(dependencies = AppComponent.class, modules = FragmentModule.class)
 public interface FragmentComponent {
 
+    void inject(AreaStateFragment fragment);
 }

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <RadioButton
+        android:id="@+id/rg_city_six"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selector_select_area_left"
+        android:button="@null"
+        android:checked="true"
+        android:gravity="center"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="6dp"
+        android:text="城六区"
+        android:textColor="@color/selector_select_area"
+        android:textSize="@dimen/text_size_normal" />
+
+    <RadioButton
+        android:id="@+id/rg_changan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selector_select_area_right"
+        android:button="@null"
+        android:gravity="center"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="6dp"
+        android:text="长安区"
+        android:textColor="@color/selector_select_area"
+        android:textSize="@dimen/text_size_normal" />
+</RadioGroup>
