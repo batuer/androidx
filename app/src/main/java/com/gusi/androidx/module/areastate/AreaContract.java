@@ -1,18 +1,22 @@
 package com.gusi.androidx.module.areastate;
 
+import androidx.core.util.Pair;
+
 import com.gusi.androidx.base.IBasePresenter;
 import com.gusi.androidx.base.IBaseView;
 
+import java.util.List;
+
 /**
  * @author Ylw
- * @since 2019/7/21 21:06
+ * @since 2019/5/30 23:56
  */
-public interface AreaStateContract {
+public interface AreaContract {
     interface View extends IBaseView {
-//        void showProjects();
+        void showRegistration(List<Pair<String, String>> pairList);
     }
 
     interface Presenter extends IBasePresenter<View> {
-        void getProjects(String url);
+        void getRegistration(String areaUrl);
     }
 }

@@ -45,6 +45,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation project(path: ':library')
     implementation rootProject.ext.dependencies["appcompat"]
     implementation rootProject.ext.dependencies["constraintlayout"]
     implementation rootProject.ext.dependencies["material"]
@@ -62,6 +63,7 @@ dependencies {
     implementation rootProject.ext.dependencies["bugly"]
     implementation rootProject.ext.dependencies["preference"]
     implementation rootProject.ext.dependencies["jsoup"]
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     annotationProcessor rootProject.ext.dependencies["butterknife-compiler"]
     annotationProcessor rootProject.ext.dependencies["dagger-compiler"]
 }

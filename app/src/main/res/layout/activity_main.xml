@@ -8,19 +8,8 @@
 
     <include layout="@layout/layout_toolbar" />
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tab_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:paddingHorizontal="1dp"
-        app:tabMode="scrollable"
-        app:tabGravity="fill"
-        app:tabSelectedTextColor="@color/colorAccent" />
-
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/view_pager"
+    <FrameLayout
+        android:id="@+id/fl_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
 </LinearLayout>

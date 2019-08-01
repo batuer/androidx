@@ -4,33 +4,22 @@ import android.view.Gravity;
 import android.widget.RadioGroup;
 
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
-import com.google.android.material.tabs.TabLayout;
 import com.gusi.androidx.R;
+import com.gusi.androidx.app.Constans;
 import com.gusi.androidx.base.BaseActivity;
-import com.gusi.androidx.module.areastate.AreaFragmentPagerAdapter;
-import com.gusi.androidx.module.areastate.AreaStateFragment;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import butterknife.BindView;
+import com.gusi.androidx.module.areastate.AreaFragment;
+import com.gusi.androidx.module.project.B;
 
 /**
  * @author Ylw
  * @since 2019-05-31
  */
-public class MainActivity extends BaseActivity<MainPresenter> implements MainContract.View {
+public class MainActivity extends BaseActivity {
 
-    @BindView(R.id.tab_layout)
-    TabLayout mTabLayout;
-
-    @BindView(R.id.view_pager)
-    ViewPager mViewPager;
-    private AreaFragmentPagerAdapter mAreaStateAdapter;
     private RadioGroup mRgSelectArea;
 
     @Override
@@ -39,23 +28,15 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
     }
 
     @Override
-    protected void initInject() {
-        getActivityComponent().inject(this);
-    }
+    protected void initInject() { }
 
     @Override
     protected void initView() {
         super.initView();
         initToolBar(mToolbar, false, "");
-        mTabLayout.setupWithViewPager(mViewPager);
-        mAreaStateAdapter = new AreaFragmentPagerAdapter(getSupportFragmentManager());
-        mViewPager.setAdapter(mAreaStateAdapter);
         addSelectArea();
-    }
-
-    @Override
-    protected void initData() {
-        mPresenter.getRegistration("http://zfyxdj.xa.gov.cn/zfrgdjpt/xmgs.aspx");
+        new MyView(this);
+        new B().getA();
     }
 
     private void addSelectArea() {
@@ -63,29 +44,34 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         Toolbar.LayoutParams params = (Toolbar.LayoutParams)mRgSelectArea.getLayoutParams();
         params.gravity = Gravity.CENTER;
         mToolbar.addView(mRgSelectArea, params);
+
+        Fragment sixFragment = AreaFragment.newInstance("http://zfyxdj.xa.gov.cn/zfrgdjpt/xmgs.aspx");
+        Fragment changanFragment = AreaFragment.newInstance("http://zfyxdj.xa.gov.cn/zfrgdjpt/xmgsca.aspx");
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.add(R.id.fl_content, sixFragment, Constans.FragmentTag.CITY_SIX_AREA);
+        transaction.add(R.id.fl_content, changanFragment, Constans.FragmentTag.CA_AREA);
+        transaction.hide(changanFragment);
+        transaction.commit();
+
         mRgSelectArea.setOnCheckedChangeListener((group, checkedId) -> {
             if (checkedId == R.id.rg_city_six) {
-                mPresenter.getRegistration("http://zfyxdj.xa.gov.cn/zfrgdjpt/xmgs.aspx");
+                showFragment(Constans.FragmentTag.CITY_SIX_AREA);
             } else if (checkedId == R.id.rg_changan) {
-                mPresenter.getRegistration("http://zfyxdj.xa.gov.cn/zfrgdjpt/xmgsca.aspx");
+                showFragment(Constans.FragmentTag.CA_AREA);
             }
         });
     }
 
-    @Override
-    public void showRegistration(List<Pair<String, String>> pairList) {
-        String areaUrl = "";
-        if (mRgSelectArea.getCheckedRadioButtonId() == R.id.rg_city_six) {
-            areaUrl = "http://zfyxdj.xa.gov.cn/zfrgdjpt/xmgs.aspx";
-        } else {
-            areaUrl = "http://zfyxdj.xa.gov.cn/zfrgdjpt/xmgsca.aspx";
+    private void showFragment(String tag) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        for (Fragment fragment : fragmentManager.getFragments()) {
+            transaction.hide(fragment);
         }
-        List<Pair<Fragment, String>> fragmentList = new ArrayList<>(pairList.size());
-        for (Pair<String, String> pair : pairList) {
-            String preUrl = areaUrl + "?state=" + pair.second + "&page=";
-            AreaStateFragment areaStateFragment = AreaStateFragment.newInstance(preUrl);
-            fragmentList.add(new Pair<>(areaStateFragment, pair.first));
+        Fragment fragment = fragmentManager.findFragmentByTag(tag);
+        if (fragment != null) {
+            transaction.show(fragment);
         }
-        mAreaStateAdapter.setData(fragmentList);
+        transaction.commit();
     }
 }

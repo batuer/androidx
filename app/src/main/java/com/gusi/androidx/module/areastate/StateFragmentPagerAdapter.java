@@ -13,10 +13,10 @@ import java.util.List;
  * @author Ylw
  * @since 2019/7/21 21:07
  */
-public class AreaFragmentPagerAdapter extends FragmentStatePagerAdapter {
+public class StateFragmentPagerAdapter extends FragmentStatePagerAdapter {
     private List<Pair<Fragment, String>> mPairList;
 
-    public AreaFragmentPagerAdapter(@NonNull FragmentManager fm) {
+    public StateFragmentPagerAdapter(@NonNull FragmentManager fm) {
         super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
     }
 

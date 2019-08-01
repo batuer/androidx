@@ -2,6 +2,8 @@ package com.gusi.androidx.model;
 
 import androidx.core.util.Pair;
 
+import com.gusi.androidx.model.entity.Project;
+
 import java.util.List;
 
 import io.reactivex.Flowable;
@@ -12,5 +14,5 @@ import io.reactivex.Flowable;
 public interface IData {
     Flowable<List<Pair<String, String>>> getRegistration(String url);
 
-    Flowable<Object> getProjects(String url);
+    Flowable<List<Project>> getProjects(String url);
 }
