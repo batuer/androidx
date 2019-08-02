@@ -24,4 +24,5 @@
     <string name="preference">preference</string>
     <string name="preference_fragment">preference_fragment</string>
     <string name="vector">vector</string>
+    <string name="theme">theme</string>
 </resources>
