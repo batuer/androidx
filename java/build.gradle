@@ -1,0 +1,12 @@
+apply plugin: 'java-library'
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.lzy.net:okgo:3.0.4'
+    implementation 'com.lzy.net:okrx2:2.0.2'
+    implementation 'org.jsoup:jsoup:1.12.1'
+    implementation 'com.google.code.gson:gson:2.8.5'
+}
+
+sourceCompatibility = "8"
+targetCompatibility = "8"

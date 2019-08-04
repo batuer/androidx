@@ -12,7 +12,6 @@ import com.gusi.androidx.R;
 import com.gusi.androidx.app.Constans;
 import com.gusi.androidx.base.BaseActivity;
 import com.gusi.androidx.module.areastate.AreaFragment;
-import com.gusi.androidx.module.project.B;
 
 /**
  * @author Ylw
@@ -35,8 +34,6 @@ public class MainActivity extends BaseActivity {
         super.initView();
         initToolBar(mToolbar, false, "");
         addSelectArea();
-        new MyView(this);
-        new B().getA();
     }
 
     private void addSelectArea() {
