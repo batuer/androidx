@@ -12,8 +12,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".module.flag.FlagActivity"
+            android:label="@string/flag"/>
+        <activity
             android:name=".module.theme.ThemeActivity"
-            android:label="@string/theme"></activity>
+            android:label="@string/theme" />
         <activity
             android:name=".module.verctor.VectorActivity"
             android:label="@string/vector" />

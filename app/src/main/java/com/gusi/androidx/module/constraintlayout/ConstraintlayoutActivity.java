@@ -1,5 +1,7 @@
 package com.gusi.androidx.module.constraintlayout;
 
+import androidx.collection.ArrayMap;
+import androidx.constraintlayout.widget.Barrier;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
@@ -7,9 +9,6 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
 import com.gusi.androidx.R;
 import com.gusi.androidx.base.BaseActivity;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 
@@ -25,57 +24,41 @@ public class ConstraintlayoutActivity extends BaseActivity {
     }
 
     @Override
-    protected void initInject() {
-    }
+    protected void initInject() {}
 
     @Override
     protected void initView() {
         super.initView();
         initToolBar(mToolbar, true, "Constraint");
-        List<Fragment> fragments = new ArrayList<>();
-        List<String> titles = new ArrayList<>();
-        titles.add("相对定位");
-        titles.add("角度定位");
-        titles.add("边距");
-        titles.add("居中和偏移");
-        titles.add("尺寸约束");
-        titles.add("链");
-        titles.add("Optimizer");
-        titles.add("Barrier");
-        titles.add("Group");
-        titles.add("Placeholder");
-        titles.add("Guideline");
-        titles.add("Layer ");
-        titles.add("CircularReveal ");
-        titles.add("Flow ");
-        fragments.add(ConstraintFragment.newInstance(R.layout.fragment_constraint_relative));
-        fragments.add(ConstraintFragment.newInstance(R.layout.fragment_constraint_angle));
-        fragments.add(ConstraintFragment.newInstance(R.layout.fragment_constraint_margin));
-        fragments.add(ConstraintFragment.newInstance(R.layout.fragment_constraint_center_offset));
-        fragments.add(ConstraintFragment.newInstance(R.layout.fragment_constraint_measure));
-        fragments.add(ConstraintFragment.newInstance(R.layout.fragment_constraint_chain));
-        fragments.add(ConstraintFragment.newInstance(R.layout.fragment_constraint_optimzer));
-        fragments.add(ConstraintFragment.newInstance(R.layout.fragment_constraint_barrier));
-        fragments.add(ConstraintFragment.newInstance(R.layout.fragment_constraint_group));
-        fragments.add(ConstraintPlacrholdrFragment.newInstance(R.layout.fragment_constraint_placeholder));
-        fragments.add(ConstraintFragment.newInstance(R.layout.fragment_constraint_guide));
-        fragments.add(ConstraintLayerFragment.newInstance(R.layout.fragment_constraint_layer));
-        fragments.add(CirclularRevealFragment.Companion.newInstance());
-        fragments.add(FlowFragment.Companion.newInstance());
+        ArrayMap<String, Fragment> fragmentMap = new ArrayMap<>();
+        fragmentMap.put("相对定位", ConstraintFragment.newInstance(R.layout.fragment_constraint_relative));
+        fragmentMap.put("角度定位", ConstraintFragment.newInstance(R.layout.fragment_constraint_angle));
+        fragmentMap.put("边距", ConstraintFragment.newInstance(R.layout.fragment_constraint_margin));
+        fragmentMap.put("居中和偏移", ConstraintFragment.newInstance(R.layout.fragment_constraint_center_offset));
+        fragmentMap.put("尺寸约束", ConstraintFragment.newInstance(R.layout.fragment_constraint_measure));
+        fragmentMap.put("链", ConstraintFragment.newInstance(R.layout.fragment_constraint_chain));
+        fragmentMap.put("Optimizer", ConstraintFragment.newInstance(R.layout.fragment_constraint_optimzer));
+        fragmentMap.put("Barrier", BarrierFragment.newInstance());
+        fragmentMap.put("Group", ConstraintFragment.newInstance(R.layout.fragment_constraint_group));
+        fragmentMap.put("Placeholder", ConstraintPlacrholdrFragment.newInstance(R.layout.fragment_constraint_placeholder));
+        fragmentMap.put("Guideline", ConstraintFragment.newInstance(R.layout.fragment_constraint_guide));
+        fragmentMap.put("Layer", ConstraintLayerFragment.newInstance(R.layout.fragment_constraint_layer));
+        fragmentMap.put("CircularReveal", CirclularRevealFragment.Companion.newInstance());
+        fragmentMap.put("Flow", FlowFragment.Companion.newInstance());
         mViewPager.setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
-                return fragments.get(position);
+                return fragmentMap.valueAt(position);
             }
 
             @Override
             public int getCount() {
-                return fragments.size();
+                return fragmentMap.size();
             }
 
             @Override
             public CharSequence getPageTitle(int position) {
-                return titles.get(position);
+                return fragmentMap.keyAt(position);
             }
         });
         mTabLayout.setupWithViewPager(mViewPager);
