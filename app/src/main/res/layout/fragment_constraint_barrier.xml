@@ -63,47 +63,84 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.66" />
+        app:layout_constraintGuide_percent="0.33" />
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guide_vertical1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.9" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_parent"
         android:layout_width="0dp"
         android:layout_height="100dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:background="#11000000"
+        app:layout_constraintEnd_toEndOf="@+id/guide_vertical1"
         app:layout_constraintStart_toEndOf="@+id/guide_vertical"
         app:layout_constraintTop_toBottomOf="@+id/guide_horizontal">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+
+        <View
+            android:id="@+id/tv1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="#0f0"
+            android:contentDescription="1"
+            android:text="tv1"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintEnd_toStartOf="@+id/tv2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrier5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
-            android:background="#44000000">
+            app:barrierDirection="end"
+            app:constraint_referenced_ids="tv1"
+            app:layout_constraintStart_toEndOf="@+id/tv1" />
 
-            <View
-                android:id="@+id/view"
-                android:layout_width="30dp"
-                android:layout_height="50dp"
-                android:background="#0ff"
-                app:layout_constraintBottom_toBottomOf="@+id/tv"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/tv" />
+        <TextView
+            android:id="@+id/tv2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:paddingStart="8dp"
+            android:background="#0ff"
+            android:contentDescription="2"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="MAAB2AAAAAAAAAtv2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tv3"
+            app:layout_constraintStart_toEndOf="@id/barrier5" />
 
-            <TextView
-                android:id="@+id/tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:background="#000"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="asddddddsaddA"
-                android:textColor="#fff"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/view" />
+        <View
+            android:id="@+id/tv3"
+            android:layout_width="30dp"
+            android:layout_height="40dp"
+            android:background="#f00"
+            android:contentDescription="3"
+            android:text="tv3"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="@+id/tv2"
+            app:layout_constraintEnd_toStartOf="@+id/view"
+            app:layout_constraintStart_toEndOf="@id/tv2"
+            app:layout_constraintTop_toTopOf="@+id/tv2" />
 
+        <View
+            android:id="@+id/view"
+            android:layout_width="10dp"
+            android:layout_height="wrap_content"
+            android:background="#00f"
+            android:contentDescription="4"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tv3"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

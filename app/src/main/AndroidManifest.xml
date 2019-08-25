@@ -12,8 +12,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".module.view.ViewActivity"
+            android:label="@string/view" />
+        <activity
             android:name=".module.flag.FlagActivity"
-            android:label="@string/flag"/>
+            android:label="@string/flag" />
         <activity
             android:name=".module.theme.ThemeActivity"
             android:label="@string/theme" />

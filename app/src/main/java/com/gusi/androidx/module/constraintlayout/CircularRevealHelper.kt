@@ -3,7 +3,6 @@ package com.gusi.androidx.module.constraintlayout
 import android.content.Context
 import android.os.Build
 import android.util.AttributeSet
-import android.util.Log
 import android.view.ViewAnimationUtils
 import androidx.constraintlayout.widget.ConstraintHelper
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -20,12 +19,7 @@ class CircularRevealHelper @JvmOverloads constructor(context: Context, attrs: At
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             val views = getViews(container)
             val i = arrayOf(1, 2)
-            for (temp in i) {
-                Log.w("Fire", "==========:" + temp)
-            }
-            Log.w("Fire", "---------------" + views)
             for (view in views) {
-                Log.e("Fire", "---------------")
                 val anim = ViewAnimationUtils.createCircularReveal(view, view.width / 2, view.height / 2, 0f,
                         Math.hypot((view.height / 2).toDouble(), (view.width / 2).toDouble()).toFloat())
                 anim.duration = 3000

@@ -15,6 +15,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -29,31 +30,36 @@ public class MainListActivity extends ListActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ArrayAdapter<ActivityInfo> adapter = new ArrayAdapter(this,
-                android.R.layout.simple_list_item_1, initData()) {
+        ArrayAdapter<ActivityInfo> adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, initData()) {
             @NonNull
             @Override
-            public View getView(int position, @Nullable View convertView,
-                                @NonNull ViewGroup parent) {
-                TextView tv = (TextView) super.getView(position, convertView, parent);
-                int labelRes = ((ActivityInfo) getItem(position)).labelRes;
+            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                TextView tv = (TextView)super.getView(position, convertView, parent);
+                int labelRes = ((ActivityInfo)getItem(position)).labelRes;
                 tv.setText(labelRes);
                 return tv;
             }
         };
         setListAdapter(adapter);
+
+        getAttachInfo(findViewById(android.R.id.content));
     }
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        ActivityInfo activityInfo = (ActivityInfo) getListAdapter().getItem(position);
+        ActivityInfo activityInfo = (ActivityInfo)getListAdapter().getItem(position);
         ClassLoader classLoader = getClassLoader();
         try {
             Class<?> aClass = classLoader.loadClass(activityInfo.name);
             startActivity(new Intent(this, aClass));
         } catch (ClassNotFoundException e) {
         }
+
+    }
+
+    private void getAttachInfo(View view) {
+        Field attachInfo = ReflectUtils1.getField(view.getClass(), "mAttachInfo");
     }
 
     private List<ActivityInfo> initData() {
@@ -69,10 +75,8 @@ public class MainListActivity extends ListActivity {
                 list.add(activityInfo);
             }
 
-            Collections.sort(list, (o1, o2) -> o1.name.substring(o1.name.lastIndexOf(".") + 1)
-                    .replace("Activity", "")
-                    .compareTo(o2.name.substring(o2.name.lastIndexOf(".") + 1)
-                            .replace("Activity", "")));
+            Collections.sort(list, (o1, o2) -> o1.name.substring(o1.name.lastIndexOf(".") + 1).replace("Activity", "")
+                .compareTo(o2.name.substring(o2.name.lastIndexOf(".") + 1).replace("Activity", "")));
         } catch (Exception e) {
         }
         return list;
