@@ -31,4 +31,7 @@
     <string name="flag">flag</string>
     <string name="view">view</string>
     <string name="qqlogin">QQLogin</string>
+
+    <string name="server_connect">连接中</string>
+    <string name="server_disconnect">断开中</string>
 </resources>

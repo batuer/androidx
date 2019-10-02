@@ -15,13 +15,13 @@
         android:summary="@string/pref_ringtone_tittle"
         android:title="@string/pref_ringtone_sum" />
 
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:icon="@null"
-        android:key="pref_blue"
-        android:summary="@string/preference_blue_sum"
-        android:title="@string/preference_blue_tittle"
-        android:widgetLayout="@layout/test" />
+<!--    <CheckBoxPreference-->
+<!--        android:defaultValue="true"-->
+<!--        android:icon="@null"-->
+<!--        android:key="pref_blue"-->
+<!--        android:summary="@string/preference_blue_sum"-->
+<!--        android:title="@string/preference_blue_tittle"-->
+<!--        android:widgetLayout="@layout/test" />-->
 
     <PreferenceCategory
         android:key="pref_fav_category"

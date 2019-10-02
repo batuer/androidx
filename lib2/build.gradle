@@ -1,0 +1,9 @@
+apply plugin: 'java-library'
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.corundumstudio.socketio:netty-socketio:1.7.17'
+}
+
+sourceCompatibility = "8"
+targetCompatibility = "8"

@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Sio_Server</string>
+    <string name="server_stop">服务未开启</string>
+    <string name="server_running">服务正在运行</string>
+</resources>

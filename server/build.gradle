@@ -1,24 +1,22 @@
 apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+
 
 android {
     compileSdkVersion rootProject.ext.android["compileSdkVersion"]
 
+
     defaultConfig {
-        applicationId "com.gusi.androidx"
+        applicationId "com.gusi.sio_server"
         minSdkVersion rootProject.ext.android["minSdkVersion"]
         targetSdkVersion rootProject.ext.android["targetSdkVersion"]
         versionCode 1
         versionName "1.0"
         vectorDrawables.useSupportLibrary = true
+        multiDexEnabled true
     }
+
     buildTypes {
-        debug {
-            buildConfigField 'String', 'BASE_URL', '"http://119.27.187.153/"'
-        }
         release {
-            buildConfigField 'String', 'BASE_URL', '"http://119.27.187.153/"'
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -40,11 +38,15 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    packagingOptions {
+        exclude 'META-INF/io.netty.versions.properties'
+        exclude 'META-INF/INDEX.LIST'
+    }
+
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation rootProject.ext.dependencies["appcompat"]
     implementation rootProject.ext.dependencies["constraintlayout"]
     implementation rootProject.ext.dependencies["material"]
@@ -59,14 +61,12 @@ dependencies {
     implementation rootProject.ext.dependencies["retrofit2_rxjava"]
     implementation rootProject.ext.dependencies["okhttp"]
     implementation rootProject.ext.dependencies["okhttp_log"]
-    implementation rootProject.ext.dependencies["bugly"]
     implementation rootProject.ext.dependencies["preference"]
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
     annotationProcessor rootProject.ext.dependencies["butterknife-compiler"]
     annotationProcessor rootProject.ext.dependencies["dagger-compiler"]
     //socket
-    implementation('io.socket:socket.io-client:1.0.0') {
-        exclude group: 'org.json', module: 'json'
-    }
+    implementation 'com.corundumstudio.socketio:netty-socketio:1.7.17'
+    implementation 'com.android.support:multidex:1.0.3'
 }

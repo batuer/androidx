@@ -4,7 +4,7 @@ import android.app.Activity;
 
 import com.gusi.androidx.di.module.ActivityModule;
 import com.gusi.androidx.di.scope.ActivityScope;
-import com.gusi.androidx.module.MainActivity;
+import com.gusi.androidx.module.ClientMainActivity;
 
 import dagger.Component;
 
@@ -16,5 +16,5 @@ import dagger.Component;
 public interface ActivityComponent {
     Activity getActivity();
 
-    void inject(MainActivity activity);
+    void inject(ClientMainActivity activity);
 }
