@@ -5,6 +5,7 @@ import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
@@ -13,7 +14,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.blankj.utilcode.util.AppUtils;
+import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.NetworkUtils;
+import com.corundumstudio.socketio.AckCallback;
 import com.corundumstudio.socketio.AckRequest;
 import com.corundumstudio.socketio.Configuration;
 import com.corundumstudio.socketio.SocketIOClient;
@@ -64,6 +67,7 @@ public class ServerMainActivity extends BaseActivity {
 
         }
     };
+    private CheckBox mCheckBoxb;
 
     @Override
     protected int getLayout() {
@@ -77,6 +81,7 @@ public class ServerMainActivity extends BaseActivity {
         mRcvMsg = findViewById(R.id.rcv_msg);
         mTvConnect = findViewById(R.id.tv_connect);
         mTvMsg = findViewById(R.id.tv_msg);
+        mCheckBoxb = findViewById(R.id.cb);
 
         mRcvConnect.setLayoutManager(new LinearLayoutManager(this));
         mRcvConnect.setHasFixedSize(true);
@@ -152,6 +157,16 @@ public class ServerMainActivity extends BaseActivity {
             msg.what = SIO_CONNECT;
             msg.obj = client;
             mHandler.sendMessage(msg);
+
+            AckCallback<SioMsg> ackCallback = new AckCallback<SioMsg>(SioMsg.class) {
+                @Override
+                public void onSuccess(SioMsg result) {
+
+                }
+            };
+            String string = client.getSessionId().toString();
+            client.sendEvent("Resp", ackCallback, string);
+            Log.w("Fire", "ServerMainActivity:164行:" + string);
         });
         server.addDisconnectListener(client -> {
             Message msg = Message.obtain();
@@ -159,13 +174,20 @@ public class ServerMainActivity extends BaseActivity {
             msg.obj = client;
             mHandler.sendMessage(msg);
         });
-        server.addEventListener("Msg", SioMsg.class, new DataListener<SioMsg>() {
+        server.addEventListener("YlwMsg", String.class, new DataListener<String>() {
             @Override
-            public void onData(SocketIOClient client, SioMsg data, AckRequest ackSender) throws Exception {
+            public void onData(SocketIOClient client, String data, AckRequest ackSender) throws Exception {
+                Log.w("Fire", "ServerMainActivity:169行:" + data + " : " + ackSender.isAckRequested());
+
+                SioMsg sioMsg = GsonUtils.fromJson(data, SioMsg.class);
                 Message msg = Message.obtain();
                 msg.what = SIO_MSG;
-                msg.obj = new Pair(client, data);
+                msg.obj = new Pair(client, sioMsg);
                 mHandler.sendMessage(msg);
+
+                if (mCheckBoxb.isChecked()) {
+                    ackSender.sendAckData("I am server:" + System.currentTimeMillis());
+                }
             }
         });
         server.start();
@@ -173,9 +195,10 @@ public class ServerMainActivity extends BaseActivity {
     }
 
     @Override
-    public void onBackPressed() {
+    protected void onDestroy() {
         disconnect();
         mHandler.removeCallbacksAndMessages(null);
         AppUtils.exitApp();
+        super.onDestroy();
     }
 }

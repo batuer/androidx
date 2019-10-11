@@ -1,4 +1,4 @@
-package com.gusi.sio_server;
+package com.gusi.androidx.module;
 
 import java.io.Serializable;
 
@@ -43,15 +43,5 @@ public class SioMsg implements Serializable {
 
     public void setData(Object data) {
         this.data = data;
-    }
-
-    @Override
-    public String toString() {
-        return "SioMsg{" +
-                "status='" + status + '\'' +
-                ", type='" + type + '\'' +
-                ", data=" + data +
-                ", time=" + time +
-                '}';
     }
 }

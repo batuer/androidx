@@ -36,6 +36,12 @@ public class ConnectAdapter extends RecyclerView.Adapter<ConnectAdapter.ViewHold
         SocketAddress remoteAddress = socketIOClient.getRemoteAddress();
         holder.mTvSession.setText("Session: " + sessionId.toString());
         holder.mTvAddress.setText("Address: " + remoteAddress.toString());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                socketIOClient.sendEvent("Resp", "I am server!" + v.getId());
+            }
+        });
     }
 
     @Override

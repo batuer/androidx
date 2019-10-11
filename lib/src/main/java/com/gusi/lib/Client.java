@@ -2,6 +2,7 @@ package com.gusi.lib;
 
 import java.io.UnsupportedEncodingException;
 
+import io.socket.client.Ack;
 import io.socket.client.IO;
 import io.socket.client.Manager;
 import io.socket.client.Socket;
@@ -12,6 +13,10 @@ import io.socket.emitter.Emitter;
  * @since 2019/9/28 17:06
  */
 public class Client {
+    public static void main(String[] args) {
+        Client.connect();
+    }
+
     public static void connect() {
         IO.Options opts = new IO.Options();
         opts.forceNew = false;
@@ -23,9 +28,9 @@ public class Client {
         // opts.transports = new String[]{WebSocket.NAME};
         opts.query = "uid=uid&token=token&device=1"; // uid=uid&token=token&device=1
         try {
-            String uri = "http://192.168.0.100:9191";
+            String uri = "http://192.168.0.102:9191";
             // "http://192.168.0.100:9191"
-            Socket socket = IO.socket(uri,opts);
+            Socket socket = IO.socket(uri, opts);
 
             // 添加全局监听器
             initSocketListener(socket);
@@ -46,6 +51,13 @@ public class Client {
             @Override
             public void call(Object... args) {
                 System.out.println("socket connect success -> " + test(args));
+
+                socket.emit("Msg", "socket connect success -> " + test(args), new Ack() {
+                    @Override
+                    public void call(Object... args) {
+                        System.out.println(test(args));
+                    }
+                });
             }
         });
         socket.on(Socket.EVENT_CONNECTING, new Emitter.Listener() {

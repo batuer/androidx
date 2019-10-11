@@ -9,12 +9,26 @@
 
     <include layout="@layout/layout_toolbar" />
 
-    <Button
-        android:id="@+id/btn_server"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="server"
-        android:text="@string/server_stop" />
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_server"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="server"
+            android:text="@string/server_stop" />
+
+        <CheckBox
+            android:id="@+id/cb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

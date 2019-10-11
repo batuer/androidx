@@ -1,9 +1,11 @@
 package com.gusi.lib2;
 
+import com.corundumstudio.socketio.AckRequest;
 import com.corundumstudio.socketio.Configuration;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.listener.ConnectListener;
+import com.corundumstudio.socketio.listener.DataListener;
 import com.corundumstudio.socketio.listener.DisconnectListener;
 import com.corundumstudio.socketio.listener.PingListener;
 
@@ -12,6 +14,10 @@ import com.corundumstudio.socketio.listener.PingListener;
  * @since 2019/9/29 22:25
  */
 public class Server {
+    public static void main(String[] args) {
+        Server.run();
+    }
+
     public static void run() {
         Configuration configuration = new Configuration();
         String ipAddress = "192.168.0.102";
@@ -39,12 +45,13 @@ public class Server {
 
             }
         });
-        // server.addEventListener("Msg", SioMsg.class, new DataListener<SioMsg>() {
-        // @Override
-        // public void onData(SocketIOClient client, SioMsg data, AckRequest ackSender) throws Exception {
-        //
-        // }
-        // });
+        server.addEventListener("Msg", String.class, new DataListener<String>() {
+            @Override
+            public void onData(SocketIOClient client, String data, AckRequest ackSender) throws Exception {
+                System.out.println(":" + data);
+                ackSender.sendAckData("I am server.");
+            }
+        });
         server.start();
         String s = configuration.getHostname() + ":" + configuration.getPort();
         System.out.println("ServerMainActivity:137:" + s);

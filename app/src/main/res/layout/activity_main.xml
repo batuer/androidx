@@ -22,7 +22,7 @@
             android:layout_weight="1"
             android:paddingHorizontal="10dp"
             android:paddingVertical="5dp"
-            android:text="192.168.0.102" />
+            android:text="192.168.0.101" />
 
         <EditText
             android:id="@+id/et_port"
@@ -64,6 +64,12 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:paddingHorizontal="5dp" />
+
+        <CheckBox
+            android:id="@+id/cb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp" />
 
         <Button
             android:id="@+id/btn_send"
