@@ -1,5 +1,6 @@
 package com.gusi.lib;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 
 import io.socket.client.Ack;
@@ -52,12 +53,27 @@ public class Client {
             public void call(Object... args) {
                 System.out.println("socket connect success -> " + test(args));
 
-                socket.emit("Msg", "socket connect success -> " + test(args), new Ack() {
+                // socket.emit("Msg", "socket connect success -> " + test(args), new Ack() {
+                // @Override
+                // public void call(Object... args) {
+                // System.out.println(test(args));
+                // }
+                // });
+                File file = new File("lib/client.txt");
+                socket.emit("FileReq", file, new Ack() {
                     @Override
                     public void call(Object... args) {
-                        System.out.println(test(args));
+                        System.out.println("FileReq:" + (args[0] instanceof File));
+                        System.out.println("FileReq:" + test(args));
                     }
                 });
+
+            }
+        });
+        socket.on("FileResp", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                System.out.println("FileResp:" + test(args));
             }
         });
         socket.on(Socket.EVENT_CONNECTING, new Emitter.Listener() {
@@ -101,7 +117,8 @@ public class Client {
                 if (i > 0) {
                     sb.append("\n");
                 }
-                sb.append(args[i].toString());
+                Object arg = args[i];
+                sb.append(arg.getClass().getTypeName() + ":---:" + arg.toString());
             }
         }
         try {

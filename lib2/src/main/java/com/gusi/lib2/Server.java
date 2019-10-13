@@ -9,6 +9,8 @@ import com.corundumstudio.socketio.listener.DataListener;
 import com.corundumstudio.socketio.listener.DisconnectListener;
 import com.corundumstudio.socketio.listener.PingListener;
 
+import java.io.File;
+
 /**
  * @author Ylw
  * @since 2019/9/29 22:25
@@ -52,6 +54,19 @@ public class Server {
                 ackSender.sendAckData("I am server.");
             }
         });
+
+        server.addEventListener("FileReq", File.class, new DataListener<File>() {
+            @Override
+            public void onData(SocketIOClient client, File data, AckRequest ackSender) throws Exception {
+                System.out.println(data + ":---:" + ackSender.isAckRequested());
+                if (ackSender.isAckRequested()) {
+                    File file = new File("lib2/server.txt");
+                    ackSender.sendAckData(file);
+                    client.sendEvent("FileResp", file);
+                }
+            }
+        });
+
         server.start();
         String s = configuration.getHostname() + ":" + configuration.getPort();
         System.out.println("ServerMainActivity:137:" + s);

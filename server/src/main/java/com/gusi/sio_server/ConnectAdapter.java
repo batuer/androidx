@@ -1,5 +1,6 @@
 package com.gusi.sio_server;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,7 +57,8 @@ public class ConnectAdapter extends RecyclerView.Adapter<ConnectAdapter.ViewHold
 
     public void removeConnect(SocketIOClient socketIOClient) {
         int index = mClientList.indexOf(socketIOClient);
-        if (index > 0) {
+        Log.w("Fire", "ConnectAdapter:59行:" + index);
+        if (index > -1) {
             mClientList.remove(index);
             notifyItemRemoved(index);
         }
