@@ -12,6 +12,7 @@ public class SioMsg implements Serializable {
     private String type;
     private Object data;
     private Long time;
+    private byte[] bys = {'a', 'b', 'c', 'd'};
 
     public Long getTime() {
         return time;
@@ -47,11 +48,7 @@ public class SioMsg implements Serializable {
 
     @Override
     public String toString() {
-        return "SioMsg{" +
-                "status='" + status + '\'' +
-                ", type='" + type + '\'' +
-                ", data=" + data +
-                ", time=" + time +
-                '}';
+        return "SioMsg{" + "status='" + status + '\'' + ", type='" + type + '\'' + ", data=" + data + ", time=" + time
+            + '}';
     }
 }

@@ -201,4 +201,19 @@ public class ServerMainActivity extends BaseActivity {
         AppUtils.exitApp();
         super.onDestroy();
     }
+
+    public void test(View view) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                long begin = System.currentTimeMillis();
+                long num = 0;
+                while ((System.currentTimeMillis() - begin) < 10 * 60 * 1000) {
+                    SioMsg sioMsg = new SioMsg();
+                    num++;
+                }
+                Log.w("Fire", "ServerMainActivity:212行:" + num);
+            }
+        }).start();
+    }
 }
