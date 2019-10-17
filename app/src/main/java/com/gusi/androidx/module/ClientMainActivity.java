@@ -15,6 +15,7 @@ import com.gusi.androidx.R;
 import com.gusi.androidx.base.BaseActivity;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -22,7 +23,6 @@ import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.FlowableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import io.socket.client.Ack;
 import io.socket.client.IO;
@@ -113,33 +113,53 @@ public class ClientMainActivity extends BaseActivity<MainPresenter> implements M
 
     @OnClick(R.id.btn_connect)
     public void connect(View view) {
-        if (mBtnConnect.getText().toString().equals(getString(R.string.server_disconnect))) {
-            showLoading("Connect...", false);
-            disconnect().concatMap((Function<Boolean, Flowable<Socket>>)aBoolean -> {
-                String ip = mEtIp.getText().toString().trim();
-                String port = mEtPort.getText().toString().trim();
-                return connect("http://" + ip + ":" + port);
-            }).subscribe(socket -> {
-                mSocket = socket;
-                mBtnConnect.setText(R.string.server_connect);
-                hideLoading();
-            }, throwable -> {
-                hideLoading();
-                mBtnConnect.setText("连接异常:" + throwable.toString());
-            });
+        // if (mBtnConnect.getText().toString().equals(getString(R.string.server_disconnect))) {
+        // showLoading("Connect...", false);
+        // disconnect().concatMap((Function<Boolean, Flowable<Socket>>)aBoolean -> {
+        // String ip = mEtIp.getText().toString().trim();
+        // String port = mEtPort.getText().toString().trim();
+        // return connect("http://" + ip + ":" + port);
+        // }).subscribe(socket -> {
+        // mSocket = socket;
+        // mBtnConnect.setText(R.string.server_connect);
+        // hideLoading();
+        // }, throwable -> {
+        // hideLoading();
+        // mBtnConnect.setText("连接异常:" + throwable.toString());
+        // });
+        //
+        // }
+        // if (mBtnConnect.getText().toString().equals(getString(R.string.server_connect))) {
+        // showLoading("Disconnect...", false);
+        // disconnect().subscribe(aBoolean -> {
+        // mBtnConnect.setText(R.string.server_disconnect);
+        // hideLoading();
+        // }, throwable -> {
+        // showInfo("断开异常:" + throwable.toString());
+        // mBtnConnect.setText(R.string.server_disconnect);
+        // hideLoading();
+        // });
+        // }
+        IO.Options opts = new IO.Options();
+        opts.forceNew = false;
+        opts.reconnection = true;
+        opts.reconnectionDelay = 3000;
+        opts.reconnectionDelayMax = 5000;
+        opts.timeout = -1;
+        opts.transports = new String[] {WebSocket.NAME};
+        // opts.transports = new String[]{WebSocket.NAME};
+        String ip = mEtIp.getText().toString().trim();
+        String port = mEtPort.getText().toString().trim();
+        opts.query = "uid=uid&token=token&device=1"; // uid=uid&token=token&device=1
+        try {
+            Socket socket = IO.socket("http://" + ip + ":" + port, opts);
+            // 添加全局监听器
+            initSocketListener(socket);
+            socket.connect();
+        } catch (URISyntaxException e) {
+            Log.e("Fire", "ClientMainActivity:159行:" + e.toString());
+        }
 
-        }
-        if (mBtnConnect.getText().toString().equals(getString(R.string.server_connect))) {
-            showLoading("Disconnect...", false);
-            disconnect().subscribe(aBoolean -> {
-                mBtnConnect.setText(R.string.server_disconnect);
-                hideLoading();
-            }, throwable -> {
-                showInfo("断开异常:" + throwable.toString());
-                mBtnConnect.setText(R.string.server_disconnect);
-                hideLoading();
-            });
-        }
     }
 
     private Flowable<Socket> connect(final String uri) {
@@ -173,7 +193,7 @@ public class ClientMainActivity extends BaseActivity<MainPresenter> implements M
             @Override
             public void call(Object... args) {
                 changeStatus(getString(R.string.server_connect));
-                Log.w("Fire", "socket connect success -> " + test(args));
+                Log.w("Fire", Thread.currentThread().getName() + " :socket connect success -> " + test(args));
             }
         });
         socket.on(Socket.EVENT_CONNECTING, new Emitter.Listener() {

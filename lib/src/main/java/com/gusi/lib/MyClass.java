@@ -9,7 +9,7 @@ public class MyClass {
 //                    Client.connect();
 //                }
 //            }).start();
-            Client.connect();
+//            Client.connect();
             try {
                 Thread.sleep(200);
             } catch (InterruptedException e) {

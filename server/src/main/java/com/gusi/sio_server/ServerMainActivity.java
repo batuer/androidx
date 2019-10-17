@@ -194,11 +194,29 @@ public class ServerMainActivity extends BaseActivity {
         return server;
     }
 
+    public void test(View view) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                long begin = System.currentTimeMillis();
+                long num = 0;
+                while ((System.currentTimeMillis() - begin) < 10 * 60 * 1000) {
+                    SioMsg sioMsg = new SioMsg();
+                    num++;
+                }
+                Log.w("Fire", "ServerMainActivity:212行:" + num);
+            }
+        }).start();
+    }
+
     @Override
-    protected void onDestroy() {
-        disconnect();
-        mHandler.removeCallbacksAndMessages(null);
-        AppUtils.exitApp();
-        super.onDestroy();
+    public void onBackPressed() {
+        if (mServer != null) {
+            disconnect();
+        } else {
+            mHandler.removeCallbacksAndMessages(null);
+            super.onBackPressed();
+            AppUtils.exitApp();
+        }
     }
 }
