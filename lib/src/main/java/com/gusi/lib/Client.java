@@ -21,10 +21,12 @@ import io.socket.engineio.client.transports.WebSocket;
  */
 public class Client {
     // private static ExecutorService sService = Executors.newSingleThreadExecutor();
-
     public static void main(String[] args) {
-        new Client().connect();
+        // new Client().connect();
         // lock();
+        MyThread myThread = new MyThread();
+//        myThread.sleepTest();
+        myThread.waitTest();
     }
 
     public void connect() {
