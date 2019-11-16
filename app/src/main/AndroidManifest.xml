@@ -5,10 +5,9 @@
 
     <dist:module dist:instant="true" />
 
-    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <!-- SDK2.1新增获取用户位置信息 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- SDK2.1新增获取用户位置信息 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
@@ -24,6 +23,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+
 
         <uses-library
             android:name="org.apache.http.legacy"
@@ -41,7 +41,7 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <!--注意，这里的222222要换成app自己的appid-->
+                <!-- 注意，这里的222222要换成app自己的appid -->
                 <data android:scheme="1109728521" />
                 <!-- 100380359 100381104 222222 -->
             </intent-filter>
@@ -51,6 +51,9 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="behind"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name=".module.lock.LockActivity"
+            android:label="@string/lock" />
         <activity
             android:name=".module.view.ViewActivity"
             android:label="@string/view" />
