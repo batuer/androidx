@@ -1,10 +1,24 @@
 package com.gusi.androidx.module.lock;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
+import android.os.Parcel;
+import android.os.RemoteException;
 import android.util.Log;
 import android.view.View;
 
 import com.gusi.androidx.R;
+import com.gusi.androidx.app.App;
 import com.gusi.androidx.base.BaseActivity;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.concurrent.Callable;
+import java.util.concurrent.FutureTask;
 
 public class LockActivity extends BaseActivity {
     private static final String TAG = "LockActivity";
@@ -131,6 +145,162 @@ public class LockActivity extends BaseActivity {
                         + from.name + to.name + amount);
                 }
             }
+        }
+    }
+
+    public void reflect(View view) {
+        System.out.println("-----Demo6-----\n\n");
+
+        try {
+            Class<?> class1 = Class.forName(App.class.getName());
+            String nameString = class1.getClassLoader().getClass().getName();
+            System.out.println("Demo6: 类加载器类名: " + nameString);
+
+            System.out.println("-----获取一个系统的类加载器(系统的类加载器，可以获取，当前这个类就是它加载的)-----");
+            // 1. 获取一个系统的类加载器(系统的类加载器 可以获取，当前这个类就是它加载的)
+            ClassLoader classLoader = ClassLoader.getSystemClassLoader();
+            System.out.println(classLoader);
+
+            System.out.println("-----获取系统类加载器的父类加载器（扩展类加载器，可以获取）-----");
+            // 2. 获取系统类加载器的父类加载器（扩展类加载器，可以获取）.
+            classLoader = classLoader.getParent();
+            System.out.println(classLoader);
+
+            System.out.println("-----获取扩展类加载器的父类加载器（引导类加载器，不可获取）-----");
+            // 3. 获取扩展类加载器的父类加载器（引导类加载器，不可获取）.
+            classLoader = classLoader.getParent();
+            System.out.println(classLoader);
+
+            System.out.println("-----测试当前类由哪个类加载器进行加载（系统类加载器）-----");
+            // 4. 测试当前类由哪个类加载器进行加载（系统类加载器）:
+            classLoader = Class.forName(getClass().getName()).getClassLoader();
+            System.out.println(classLoader);
+            ClassLoader classLoader1 = getClassLoader();
+            System.out.println("==:" + classLoader1);
+
+            System.out.println("-----测试 JDK 提供的 Object 类由哪个类加载器负责加载（引导类加载器，不可获取）-----");
+            // 5. 测试 JDK 提供的 Object 类由哪个类加载器负责加载（引导类加载器，不可获取）
+            classLoader = Class.forName("java.lang.Object").getClassLoader();
+            System.out.println(classLoader);
+        } catch (ClassNotFoundException e) {
+            Log.e("Fire", "LockActivity:172行:" + e.toString());
+        }
+    }
+
+    /**
+     * 应用启动状态跟踪 一般写在application里面的attachBaseContext()方法里面，因为这个方法时机最早
+     *
+     * @param context
+     *            context
+     * @throws Exception
+     */
+    public static void hookHandler(Context context) throws Exception {
+        // 反射获取ActivityThread的Class对象
+        Class<?> activityThreadClass = Class.forName("android.app.ActivityThread");
+        // 获取currentActivityThread私有方法
+        Method currentActivityThreadMethod = activityThreadClass.getDeclaredMethod("currentActivityThread");
+        currentActivityThreadMethod.setAccessible(true);
+        // 执行currentActivityThreadMethod获取主线程对象
+        Object activityThread = currentActivityThreadMethod.invoke(null);
+        // 获取mH字段
+        Field mH = activityThreadClass.getDeclaredField("mH");
+        mH.setAccessible(true);
+        // 获取mH私有字段的值
+        Handler handler = (Handler)mH.get(activityThread);
+        // 反射获取Handler中原始的mCallBack字段
+        Field mCallBack = Handler.class.getDeclaredField("mCallback");
+        mCallBack.setAccessible(true);
+        // 这里设置了我们自己实现了接口的CallBack对象
+        mCallBack.set(handler, new CustomHandler(handler));
+    }
+
+    public void Broadcast(View view) {
+        view.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < 5; i++) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            while (true) {
+                                Intent intent = new Intent();
+                                intent
+                                    .setComponent(new ComponentName("com.tencent.mm", "com.tencent.mm.ui.LauncherUI"));
+                                startActivity(intent);
+                                Log.d("Fire", "LockActivity:220行:" + intent);
+                            }
+                        }
+                    }).start();
+                }
+            }
+        }, 2000);
+
+    }
+
+    public void Broadcast1(View view) {
+        Intent intent = new Intent();
+        intent.setComponent(new ComponentName("com.tencent.mm", "com.tencent.mm.ui.LauncherUI"));
+        startActivity(intent);
+        Log.d("Fire", "LockActivity:220行:" + intent);
+    }
+
+    public void Ams(View view) {
+        try {
+            Class<?> aClass = Class.forName("android.os.ServiceManager");
+            Method method = aClass.getMethod("getService", String.class);
+            Object invoke = method.invoke(null, "activity");
+            IBinder iBinder = (IBinder)invoke;
+
+            for (int i = 0; i < 5; i++) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String name = Thread.currentThread().getName();
+                        while (true) {
+                            try {
+                                Parcel data = Parcel.obtain();
+                                data.writeString("dataYlw: " + name);
+                                Parcel reply = Parcel.obtain();
+                                reply.writeString("replyYlw: " + name);
+                                boolean transact = iBinder.transact(100, data, reply, IBinder.FLAG_ONEWAY);
+                                Log.d("Fire", "LockActivity:263行: " + name + ":--:" + transact);
+                            } catch (RemoteException e) {
+                                Log.e("Fire", "LockActivity:264行:" + name + " : " + e.toString());
+                            }
+                        }
+                    }
+                }).start();
+            }
+
+        } catch (Exception e) {
+            Log.e("Fire", "LockActivity:251行:" + e.toString());
+        }
+
+        FutureTask futureTask = new FutureTask(new Callable() {
+            @Override
+            public Object call() throws Exception {
+                return null;
+            }
+        });
+        futureTask.run();
+
+    }
+
+    /**
+     * 用于应用初始化异步通信Handler,可以截获发送的一系列事件
+     */
+    public static class CustomHandler implements Handler.Callback {
+        private Handler origin;
+
+        public CustomHandler(Handler mHandler) {
+            this.origin = mHandler;
+        }
+
+        @Override
+        public boolean handleMessage(Message msg) {
+            // 这样每次启动的时候可以做些额外的事情
+            origin.handleMessage(msg);
+            return false;
         }
     }
 

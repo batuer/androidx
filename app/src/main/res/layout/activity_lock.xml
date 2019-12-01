@@ -26,4 +26,26 @@
         android:layout_height="wrap_content"
         android:onClick="transfer"
         android:text="transfer" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="reflect"
+        android:text="reflect" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="Broadcast"
+        android:text="Broadcast" />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="Broadcast1"
+        android:text="Broadcast1" />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="Ams"
+        android:text="Ams" />
 </LinearLayout>
