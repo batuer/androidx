@@ -215,29 +215,15 @@ public class LockActivity extends BaseActivity {
     }
 
     public void Broadcast(View view) {
-        view.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                for (int i = 0; i < 5; i++) {
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            while (true) {
-                                Intent intent = new Intent();
-                                intent
-                                    .setComponent(new ComponentName("com.tencent.mm", "com.tencent.mm.ui.LauncherUI"));
-                                startActivity(intent);
-                                Log.d("Fire", "LockActivity:220行:" + intent);
-                            }
-                        }
-                    }).start();
-                }
-            }
-        }, 2000);
-
+        Log.w("Fire", "LockActivity:218行:" );
+        Intent intent = new Intent();
+        intent.setAction("com.gusi.ylwylw");
+        sendOrderedBroadcast(intent, "com.gusi.ylw");
+        Log.w("Fire", "LockActivity:222行:" );
     }
 
     public void Broadcast1(View view) {
+        Log.w("Fire", "LockActivity:226行:" );
         Intent intent = new Intent();
         intent.setComponent(new ComponentName("com.tencent.mm", "com.tencent.mm.ui.LauncherUI"));
         startActivity(intent);
@@ -251,7 +237,7 @@ public class LockActivity extends BaseActivity {
             Object invoke = method.invoke(null, "activity");
             IBinder iBinder = (IBinder)invoke;
 
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < 1; i++) {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
