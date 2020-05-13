@@ -18,4 +18,22 @@
         android:layout_marginTop="10dp"
         android:background="#44000000"
         android:onClick="clickTest" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="handleThread"
+        android:text="handleThread" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="release"
+        android:text="release" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="asyncQueryHandler"
+        android:text="asyncQueryHandler" />
 </LinearLayout>

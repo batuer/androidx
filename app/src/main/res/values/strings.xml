@@ -24,6 +24,7 @@
     <string name="flag_string"> 1 <![CDATA[&]]> 任何数都是那个数本身\n 0 <![CDATA[&]]> 任何数都是0 \n 0 | 任何数都是那个数本身 \n 1 | 任何数都是 1</string>
 
     <string name="constraint">constraint</string>
+    <string name="listView">listView</string>
     <string name="lock">lock</string>
     <string name="preference">preference</string>
     <string name="preference_fragment">preference_fragment</string>

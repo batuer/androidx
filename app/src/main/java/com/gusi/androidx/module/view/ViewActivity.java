@@ -6,9 +6,7 @@ import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.DeadObjectException;
-import android.os.RemoteException;
-import android.os.SystemClock;
+import android.os.HandlerThread;
 import android.provider.CallLog;
 import android.provider.ContactsContract;
 import android.util.Log;
@@ -16,10 +14,11 @@ import android.view.View;
 import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresPermission;
 
 import com.blankj.utilcode.util.PermissionUtils;
 import com.gusi.androidx.R;
+
+import java.lang.ref.WeakReference;
 
 /**
  * @author Ylw
@@ -27,15 +26,16 @@ import com.gusi.androidx.R;
  */
 public class ViewActivity extends Activity {
     private static final String TAG = "Fire";
-    private String[] permissionList = new String[] { // 申请的权限列表
-        Manifest.permission.READ_CALL_LOG, Manifest.permission.WRITE_CALL_LOG, Manifest.permission.READ_CONTACTS};
+    private String[] permissionList = new String[]{ // 申请的权限列表
+            Manifest.permission.READ_CALL_LOG, Manifest.permission.WRITE_CALL_LOG, Manifest.permission.READ_CONTACTS};
     private Uri callUri = CallLog.Calls.CONTENT_URI;
     private String[] columns = {CallLog.Calls.CACHED_NAME// 通话记录的联系人
-        , CallLog.Calls.NUMBER// 通话记录的电话号码
-        , CallLog.Calls.DATE// 通话记录的日期
-        , CallLog.Calls.DURATION// 通话时长
-        , CallLog.Calls.TYPE};// 通话类型}
+            , CallLog.Calls.NUMBER// 通话记录的电话号码
+            , CallLog.Calls.DATE// 通话记录的日期
+            , CallLog.Calls.DURATION// 通话时长
+            , CallLog.Calls.TYPE};// 通话类型}
     String[] projection = {ContactsContract.PhoneLookup.DISPLAY_NAME, ContactsContract.CommonDataKinds.Phone.NUMBER};
+    private HandlerThread mHandlerThread;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,7 +61,7 @@ public class ViewActivity extends Activity {
         String[] projection = {};
         ContentResolver contentResolver = getContentResolver();
         Cursor cursor = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-            new String[] {"display_name", "sort_key", "contact_id", "data1"}, null, null, null);
+                new String[]{"display_name", "sort_key", "contact_id", "data1"}, null, null, null);
         Log.i(TAG, "cursor connect count:" + cursor.getCount());
         Log.w("Fire", "ViewActivity:59行:" + contentResolver);
         // moveToNext方法返回的是一个boolean类型的数据
@@ -76,85 +76,63 @@ public class ViewActivity extends Activity {
         cursor.close();
     }
 
-    public final @Nullable Cursor query(final @RequiresPermission.Read @NonNull Uri uri, @Nullable String[] projection,
-        @Nullable Bundle queryArgs, @Nullable CancellationSignal cancellationSignal) {
-        Preconditions.checkNotNull(uri, "uri");
+    int a = 0;
 
-        try {
-            Log.w("Fire", "ViewActivity:84行:" + mWrapped);
-            if (mWrapped != null) {
-                return mWrapped.query(uri, projection, queryArgs, cancellationSignal);
-            }
-        } catch (RemoteException e) {
-            Log.e("Fire", "ViewActivity:89行:" + e.toString());
-            return null;
-        }
-
-        IContentProvider unstableProvider = acquireUnstableProvider(uri);
-        Log.w("Fire", "ViewActivity:94行:" + unstableProvider);
-        if (unstableProvider == null) {
-            return null;
-        }
-        IContentProvider stableProvider = null;
-        Cursor qCursor = null;
-        try {
-            long startTime = SystemClock.uptimeMillis();
-
-            ICancellationSignal remoteCancellationSignal = null;
-            if (cancellationSignal != null) {
-                cancellationSignal.throwIfCanceled();
-                remoteCancellationSignal = unstableProvider.createCancellationSignal();
-                cancellationSignal.setRemote(remoteCancellationSignal);
-            }
-            try {
-                qCursor = unstableProvider.query(mPackageName, uri, projection, queryArgs, remoteCancellationSignal);
-                Log.w("Fire", "ViewActivity:111行:-----------------------" );
-            } catch (DeadObjectException e) {
-                // The remote process has died... but we only hold an unstable
-                // reference though, so we might recover!!! Let's try!!!!
-                // This is exciting!!1!!1!!!!1
-                unstableProviderDied(unstableProvider);
-                stableProvider = acquireProvider(uri);
-                if (stableProvider == null) {
-                    return null;
+    public void handleThread(View view) {
+        mHandlerThread = new HandlerThread("Ylw----Ylw: " + a++);
+        mHandlerThread.start();
+        Thread thread1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                long l = System.currentTimeMillis();
+                while ((System.currentTimeMillis() - l) < 5000) {
+                    Log.w("Fire", "ViewActivity:86行:" + l);
                 }
-                qCursor = stableProvider.query(mPackageName, uri, projection, queryArgs, remoteCancellationSignal);
             }
-            Log.w("Fire", "ViewActivity:123行:" + qCursor);
-            if (qCursor == null) {
-                return null;
-            }
+        });
+        thread1.setName("Ylw===Ylw: " + a);
+        thread1.start();
+    }
 
-            // Force query execution. Might fail and throw a runtime exception here.
-            qCursor.getCount();
-            long durationMillis = SystemClock.uptimeMillis() - startTime;
-            maybeLogQueryToEventLog(durationMillis, uri, projection, queryArgs);
-
-            // Wrap the cursor object into CursorWrapperInner object.
-            final IContentProvider provider = (stableProvider != null) ? stableProvider : acquireProvider(uri);
-            final CursorWrapperInner wrapper = new CursorWrapperInner(qCursor, provider);
-            stableProvider = null;
-            qCursor = null;
-            Log.w("Fire", "ViewActivity:138行:" + wrapper);
-            return wrapper;
-        } catch (RemoteException e) {
-            // Arbitrary and not worth documenting, as Activity
-            // Manager will kill this process shortly anyway.
-            return null;
-        } finally {
-            if (qCursor != null) {
-                qCursor.close();
-            }
-            if (cancellationSignal != null) {
-                cancellationSignal.setRemote(null);
-            }
-            if (unstableProvider != null) {
-                releaseUnstableProvider(unstableProvider);
-            }
-            if (stableProvider != null) {
-                releaseProvider(stableProvider);
-            }
+    public void release(View view) {
+        if (mHandlerThread != null) {
+            mHandlerThread.quit();
         }
     }
 
+    public void asyncQueryHandler(View view) {
+        MyAsyncQueryHandler asyncQueryHandler = new MyAsyncQueryHandler(getContentResolver()) {
+
+        };
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                while (true) {
+                    WeakReference<ContentResolver> resolver = asyncQueryHandler.getResolver();
+                    WeakReference<HandlerThread> threadWeakReference = asyncQueryHandler.getThreadWeakReference();
+                    Log.w("Fire", "ViewActivity:115行:" + resolver + " :--: " + threadWeakReference);
+                    if (resolver == null) {
+                        Log.e("Fire", "ViewActivity:116行:" + resolver);
+                    } else {
+                        ContentResolver contentResolver = resolver.get();
+                        if (contentResolver == null) {
+                            Log.e("Fire", "ViewActivity:120行:" + contentResolver);
+                        }
+                    }
+                    if (threadWeakReference == null) {
+
+                        Log.e("Fire", "ViewActivity:125行:" + threadWeakReference);
+                    } else {
+                        HandlerThread handlerThread = threadWeakReference.get();
+                        if (handlerThread == null) {
+                            Log.e("Fire", "ViewActivity:129行:" + handlerThread);
+                        }
+                    }
+
+                }
+            }
+        }).start();
+    }
 }
