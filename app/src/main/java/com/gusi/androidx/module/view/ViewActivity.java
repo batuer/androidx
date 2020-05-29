@@ -10,6 +10,7 @@ import android.os.HandlerThread;
 import android.provider.CallLog;
 import android.provider.ContactsContract;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -49,6 +50,7 @@ public class ViewActivity extends Activity {
     }
 
     public void query(View view) {
+        view.invalidate();
         if (PermissionUtils.isGranted(permissionList)) {
             getConnect();
         } else {
@@ -134,5 +136,25 @@ public class ViewActivity extends Activity {
                 }
             }
         }).start();
+    }
+
+    @Override
+    protected void onPause() {
+        Log.w("Fire_View", "ViewActivity:onPause:" + hasWindowFocus());
+        super.onPause();
+        Log.w("Fire_View", "ViewActivity:onPause:" + hasWindowFocus());
+    }
+
+    @Override
+    protected void onResume() {
+        Log.w("Fire_View", "ViewActivity:onResume:" + hasWindowFocus());
+        super.onResume();
+        Log.w("Fire_View", "ViewActivity:onResume:" + hasWindowFocus());
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        Log.i("Fire_View", "dispatchTouchEvent: " + ev.getAction() + "   " + hasWindowFocus());
+        return super.dispatchTouchEvent(ev);
     }
 }

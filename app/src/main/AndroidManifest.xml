@@ -27,7 +27,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".module.db.DbActivity"
+            android:label="@string/db"></activity>
 
+        <service
+            android:name=".module.aidl.AidlService"
+            android:enabled="true"
+            android:exported="true" />
 
         <uses-library
             android:name="org.apache.http.legacy"
@@ -81,8 +88,7 @@
             android:label="@string/constraint" />
         <activity
             android:name=".module.lv.ListViewActivity"
-            android:label="@string/listView"></activity>
-
+            android:label="@string/listView" />
         <activity android:name=".module.MainListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

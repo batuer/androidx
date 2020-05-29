@@ -25,6 +25,7 @@
 
     <string name="constraint">constraint</string>
     <string name="listView">listView</string>
+    <string name="db">db</string>
     <string name="lock">lock</string>
     <string name="preference">preference</string>
     <string name="preference_fragment">preference_fragment</string>

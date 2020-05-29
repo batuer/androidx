@@ -11,6 +11,7 @@ import com.gusi.androidx.di.component.AppComponent;
 import com.gusi.androidx.di.component.DaggerAppComponent;
 import com.gusi.androidx.di.module.AppModule;
 import com.gusi.androidx.di.module.HttpModule;
+import com.gusi.androidx.module.db.DBManger;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.upgrade.UpgradeStateListener;
@@ -30,6 +31,7 @@ public class App extends Application {
         sApp = this;
         initComponent();
         initBugly();
+        DBManger.getInstance();
     }
 
     private void initComponent() {
@@ -50,7 +52,7 @@ public class App extends Application {
         Beta.autoDownloadOnWifi = false;
         Beta.canShowApkInfo = true;
         Bugly.setIsDevelopmentDevice(getApplicationContext(), false);
-        Bugly.init(getApplicationContext(), "40acb59a21", true);
+        Bugly.init(getApplicationContext(), "0000000", true);
         if (PermissionUtils.isGranted(Manifest.permission.READ_PHONE_STATE)) {
             CrashReport.setUserId("IMEI:" + PhoneUtils.getDeviceId());
         }

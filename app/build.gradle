@@ -67,4 +67,5 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
     annotationProcessor rootProject.ext.dependencies["butterknife-compiler"]
     annotationProcessor rootProject.ext.dependencies["dagger-compiler"]
+    debugCompile 'com.amitshekhar.android:debug-db:1.0.0'
 }
