@@ -27,6 +27,7 @@
     <string name="listView">listView</string>
     <string name="db">db</string>
     <string name="lock">lock</string>
+    <string name="jni">jni</string>
     <string name="preference">preference</string>
     <string name="preference_fragment">preference_fragment</string>
     <string name="vector">vector</string>

@@ -105,6 +105,13 @@
         android:onClick="popupWindow"
         android:text="popupWindow" />
 
+    <com.gusi.androidx.module.lv.MyFrameLayout
+        android:id="@+id/fl"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="#8B8383" />
+
+
     <TextView
         android:id="@+id/sample_text"
         android:layout_width="wrap_content"

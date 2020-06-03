@@ -27,9 +27,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".module.jni.JniActivity"
+            android:label="@string/jni"
+            ></activity>
         <activity
             android:name=".module.db.DbActivity"
-            android:label="@string/db"></activity>
+            android:label="@string/db" />
 
         <service
             android:name=".module.aidl.AidlService"

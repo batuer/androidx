@@ -7,7 +7,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -43,15 +42,15 @@ public class ListViewActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_view);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (true) {
-                    Log.i("Fire_ListView", "run: " + getTopActivity(ListViewActivity.this) + " ," + hasWindowFocus());
-                    SystemClock.sleep(100);
-                }
-            }
-        }).start();
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                while (true) {
+//                    Log.i("Fire_ListView", "run: " + getTopActivity(ListViewActivity.this) + " ," + hasWindowFocus());
+//                    SystemClock.sleep(100);
+//                }
+//            }
+//        }).start();
 
 
         View decorView = getWindow().getDecorView();
@@ -110,6 +109,23 @@ public class ListViewActivity extends Activity {
         mListView.setAdapter(mAdapter);
         mListView.requestLayout();
 //        Toast.makeText()
+
+        View view = findViewById(R.id.fl);
+        view.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Log.e("Fire", Log.getStackTraceString(new Throwable()));
+                return true;
+            }
+        });
+        view.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Log.i("Fire", "onTouch: " + event.toString());
+                return false;
+            }
+        });
+
     }
 
     public void addItem(View view) {
@@ -218,12 +234,12 @@ public class ListViewActivity extends Activity {
         return super.dispatchKeyEvent(event);
     }
 
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        Log.w("Fire_ListView",
-                "dispatchTouchEvent:185行:   " + ev.getAction() + ",hasWindowFocus = " + hasWindowFocus() + " ,Top = " + getTopActivity(this));
-        return super.dispatchTouchEvent(ev);
-    }
+//    @Override
+//    public boolean dispatchTouchEvent(MotionEvent ev) {
+//        Log.w("Fire_ListView",
+//                "dispatchTouchEvent:185行:   " + ev.getAction() + ",hasWindowFocus = " + hasWindowFocus() + " ,Top = " + getTopActivity(this));
+//        return super.dispatchTouchEvent(ev);
+//    }
 
     public String getTopActivity(Context context) {
         android.app.ActivityManager manager =
