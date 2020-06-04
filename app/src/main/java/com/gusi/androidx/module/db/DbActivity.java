@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
-import android.widget.ListView;
 
 import com.blankj.utilcode.util.TimeUtils;
 import com.gusi.androidx.R;
@@ -22,8 +21,6 @@ public class DbActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_db);
-        ListView listView = findViewById(R.id.lv);
-
     }
 
     //create table table1 ( _byte byte, _long long, _text text, _short short, _int int, _float float, _double double,
@@ -75,7 +72,7 @@ public class DbActivity extends Activity {
 
             result = String.format("_byte = %s, _long = %s, _text = %s, _short = %s, _int = %s, _float = %s, _double" +
                             " = %s, _boolean = %s, _byteArr = %s",
-                    _byte, _long, _text, _short, _int, _float, _double, _boolean, _byteArr) ;
+                    _byte, _long, _text, _short, _int, _float, _double, _boolean, _byteArr);
             Log.w("Fire", "DbActivity:69行:" + result);
         }
     }
@@ -85,7 +82,7 @@ public class DbActivity extends Activity {
     public void addStudent(View view) {
         ContentValues contentValues = new ContentValues();
         String name = null;
-        contentValues.put("NAME", (String)null);
+        contentValues.put("NAME", (String) null);
         contentValues.put("BIRTH", TimeUtils.getNowString());
         contentValues.put("SEX", true);
         contentValues.put("AGE", new Random().nextInt(100) + 1);
@@ -121,7 +118,7 @@ public class DbActivity extends Activity {
         }
     }
 
-    private class MyCursorAdapter extends CursorAdapter{
+    private class MyCursorAdapter extends CursorAdapter {
         public MyCursorAdapter(Context context, Cursor cursor) {
             super(context, cursor);
         }
