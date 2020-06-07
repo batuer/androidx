@@ -7,6 +7,7 @@ import android.app.Application;
 import com.blankj.utilcode.util.PermissionUtils;
 import com.blankj.utilcode.util.PhoneUtils;
 import com.blankj.utilcode.util.Utils;
+import com.gu.toolargetool.TooLargeTool;
 import com.gusi.androidx.di.component.AppComponent;
 import com.gusi.androidx.di.component.DaggerAppComponent;
 import com.gusi.androidx.di.module.AppModule;
@@ -32,6 +33,7 @@ public class App extends Application {
         initComponent();
         initBugly();
         DBManger.getInstance();
+        TooLargeTool.startLogging(this);
     }
 
     private void initComponent() {

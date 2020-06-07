@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -22,11 +23,15 @@ public class FragmentActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fragment);
+        ImageView imageView = findViewById(R.id.iv);
         if (savedInstanceState != null) {
             Bitmap bitmap = savedInstanceState.getParcelable("Bitmap");
+            imageView.setImageBitmap(bitmap);
             Log.e("Fire", "FragmentActivity:33行:" + bitmap);
         } else {
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.a);
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.timg);
+            Log.w("Fire", "FragmentActivity:33行:" + bitmap.getByteCount());
+            imageView.setImageBitmap(bitmap);
         }
     }
 
@@ -47,7 +52,7 @@ public class FragmentActivity extends Activity {
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putByteArray("byte0000000000000000", new byte[1024 * 1024]);
+        outState.putByteArray("byte0000000000000000", new byte[1024]);
 //        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.a);
 //        outState.putParcelable("Bitmap", bitmap);
 
@@ -88,7 +93,5 @@ public class FragmentActivity extends Activity {
     public void turn(View view) {
         startActivity(new Intent(this, ListViewActivity.class));
 //        finish();
-        isFinishing();
-        isDestroyed();
     }
 }
