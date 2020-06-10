@@ -2,21 +2,25 @@ package com.gusi.androidx.module.view;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.LoaderManager;
 import android.content.ContentResolver;
+import android.content.Context;
+import android.content.CursorLoader;
+import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.HandlerThread;
 import android.provider.CallLog;
 import android.provider.ContactsContract;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
+import android.view.ViewGroup;
+import android.widget.CursorAdapter;
 
 import androidx.annotation.Nullable;
 
-import com.blankj.utilcode.util.PermissionUtils;
 import com.gusi.androidx.R;
 
 import java.lang.ref.WeakReference;
@@ -37,26 +41,72 @@ public class ViewActivity extends Activity {
             , CallLog.Calls.TYPE};// 通话类型}
     String[] projection = {ContactsContract.PhoneLookup.DISPLAY_NAME, ContactsContract.CommonDataKinds.Phone.NUMBER};
     private HandlerThread mHandlerThread;
+    private Cursor mCursor;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view);
-        WindowManager.LayoutParams attributes = getWindow().getAttributes();
+//        WindowManager.LayoutParams attributes = getWindow().getAttributes();
+
     }
 
     public void clickTest(View view) {
         view.requestLayout();
     }
 
+    private boolean b;
+
     public void query(View view) {
-        view.invalidate();
-        if (PermissionUtils.isGranted(permissionList)) {
-            getConnect();
-        } else {
-            PermissionUtils.permission(permissionList).request();
-        }
+        getLoaderManager().initLoader(1, null, new LoaderManager.LoaderCallbacks<Cursor>() {
+            @Override
+            public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+                CursorLoader cursorLoader = new CursorLoader(ViewActivity.this,
+                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                        new String[]{"display_name", "sort_key", "contact_id", "data1"}, null, null, null);
+                Log.w("Fire", "ViewActivity:onCreateLoader:" + cursorLoader + " , " + Thread.currentThread());
+                return cursorLoader;
+            }
+
+            @Override
+            public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+                mCursor = cursor;
+                Log.w("Fire_" + cursor, Log.getStackTraceString(new Throwable()));
+                if (!b) {
+                    b = true;
+//                    new MyCursorAdapter(ViewActivity.this, cursor);
+                }
+
+
+                while (cursor.moveToNext()) {
+                    // 读取通讯录的姓名
+                    String name =
+                            cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+                    // 读取通讯录的号码
+                    String number =
+                            cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+
+                    Log.i(TAG, "获取的通讯录是： " + name + "\n" + " number : " + number);
+                }
+            }
+
+            @Override
+            public void onLoaderReset(Loader<Cursor> loader) {
+                Log.w("Fire", "ViewActivity:onLoaderReset:" + loader + " , " + Thread.currentThread());
+            }
+        });
+
+
+//        view.invalidate();
+//        if (PermissionUtils.isGranted(permissionList)) {
+//            getConnect();
+//        } else {
+//            PermissionUtils.permission(permissionList).request();
+//        }
     }
+
+
+
 
     // 获取联系人
     private void getConnect() {
@@ -139,22 +189,14 @@ public class ViewActivity extends Activity {
     }
 
     @Override
-    protected void onPause() {
-        Log.w("Fire_View", "ViewActivity:onPause:" + hasWindowFocus());
-        super.onPause();
-        Log.w("Fire_View", "ViewActivity:onPause:" + hasWindowFocus());
-    }
+    protected void onDestroy() {
+        super.onDestroy();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Log.w("Fire", "ViewActivity:178行:" + mCursor.isClosed());
+            }
+        }, 3000);
 
-    @Override
-    protected void onResume() {
-        Log.w("Fire_View", "ViewActivity:onResume:" + hasWindowFocus());
-        super.onResume();
-        Log.w("Fire_View", "ViewActivity:onResume:" + hasWindowFocus());
-    }
-
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        Log.i("Fire_View", "dispatchTouchEvent: " + ev.getAction() + "   " + hasWindowFocus());
-        return super.dispatchTouchEvent(ev);
     }
 }

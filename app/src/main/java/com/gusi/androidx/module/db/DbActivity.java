@@ -4,11 +4,15 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CursorAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import androidx.annotation.RequiresApi;
 
 import com.blankj.utilcode.util.TimeUtils;
 import com.gusi.androidx.R;
@@ -91,13 +95,13 @@ public class DbActivity extends Activity {
     }
 
     public void delStudent(View view) {
-        DBManger.getInstance().delete("Student", "NAME = ?", new String[]{"name"});
+        DBManger.getInstance().delete("Student", "INTRO = ?", new String[]{"INTRO:"});
     }
 
     public void updateStudent(View view) {
         ContentValues contentValues = new ContentValues();
         contentValues.put("BIRTH", TimeUtils.getNowString());
-        DBManger.getInstance().update("Student", contentValues, "BIRTH = ?", new String[]{TimeUtils.getNowString()});
+        DBManger.getInstance().update("Student", contentValues, null, null);
     }
 
     //CREATE TABLE IF NOT EXISTS "Student" ("_id" INTEGER PRIMARY KEY ,"NAME" TEXT,"BIRTH" TEXT,"SEX" boolean,"AGE"
@@ -118,19 +122,49 @@ public class DbActivity extends Activity {
         }
     }
 
-    private class MyCursorAdapter extends CursorAdapter {
-        public MyCursorAdapter(Context context, Cursor cursor) {
-            super(context, cursor);
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public void load(View view) {
+        Cursor cursor = DBManger.getInstance().query("Student", null, null, null, null, null, null, null);
+        MyCursorAdapter adapter = new MyCursorAdapter(this, cursor);
+//        addTable1(view);
+        ListView listView = findViewById(R.id.lv);
+        listView.setAdapter(adapter);
+    }
+
+    private class MyCursorAdapter extends BaseCursorAdapter {
+        @RequiresApi(api = Build.VERSION_CODES.M)
+        public MyCursorAdapter(Context context, Cursor c) {
+            super(context, c);
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.M)
+        @Override
+        public int getCount() {
+            int count = super.getCount();
+            Log.w("Fire", "MyCursorAdapter:117行:" + count);
+            return count;
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.M)
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View view = super.getView(position, convertView, parent);
+            Log.w("Fire", "MyCursorAdapter:124行:" + position);
+            return view;
         }
 
         @Override
         public View newView(Context context, Cursor cursor, ViewGroup parent) {
-            return null;
+            View view = getLayoutInflater().inflate(android.R.layout.simple_list_item_1, null);
+            return view;
         }
 
         @Override
         public void bindView(View view, Context context, Cursor cursor) {
-
+            if (view instanceof TextView) {
+                TextView textView = (TextView) view;
+                textView.setText(cursor.getString(cursor.getColumnIndex("BIRTH")));
+            }
         }
     }
 }
