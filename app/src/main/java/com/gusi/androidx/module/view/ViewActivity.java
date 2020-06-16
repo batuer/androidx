@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.LoaderManager;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
@@ -15,9 +14,8 @@ import android.os.HandlerThread;
 import android.provider.CallLog;
 import android.provider.ContactsContract;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.CursorAdapter;
 
 import androidx.annotation.Nullable;
 
@@ -76,8 +74,6 @@ public class ViewActivity extends Activity {
                     b = true;
 //                    new MyCursorAdapter(ViewActivity.this, cursor);
                 }
-
-
                 while (cursor.moveToNext()) {
                     // 读取通讯录的姓名
                     String name =
@@ -105,8 +101,15 @@ public class ViewActivity extends Activity {
 //        }
     }
 
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        return super.dispatchTouchEvent(ev);
+    }
 
-
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return super.onTouchEvent(event);
+    }
 
     // 获取联系人
     private void getConnect() {

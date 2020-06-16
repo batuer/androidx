@@ -1,55 +1,83 @@
 package com.gusi.java;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 public class YlwClass {
 
     public static void main(String[] args) {
-        System.out.println("----------------");
-        for (int i = 0; i < 5; i++) {
-            Thread thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    for (;;) {
-                        A.getInstance().setB(null);
-                    }
+        int totalDays = 0;
+        long totalMinutes = 0;
+        try {
+            File file = new File(new File("").getCanonicalPath(), "Input");
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            String line = null;
+            // 168929 2019/6/29	8:05	17:48
+            while ((line = reader.readLine()) != null) {
+                String[] strings = line.split(",");
+                if (strings.length != 6) {
+                    continue;
                 }
-            });
-            thread.setName("11111:-----: " + i);
-            thread.start();
-        }
-        for (int i = 0; i < 2; i++) {
-            Thread thread1 = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    for (;;) {
-                        A.getInstance().setB(new B());
-                    }
-
+                if (isSaturday(strings[3])) {
+                    continue;
                 }
-            });
-            thread1.setName("2222222:---------:  " + i);
-            thread1.start();
-        }
-
-        Thread thread2 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                for (;;) {
-                    A.getInstance().test();
-                }
+                totalDays++;
+                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+                Date begin = sdf.parse(strings[4]);
+                Date end = sdf.parse(strings[5]);
+                Date afternoon = sdf.parse("17:30");
+                Date afternoon1 = sdf.parse("18:00");
+                long total =
+                        afternoon.getTime() - begin.getTime() - 90 * 60 * 1000 + Math.max((end.getTime() - afternoon1.getTime()), 0);
+                totalMinutes += total / (1000 * 60);
             }
-        });
-        thread2.setName("3333333333333");
-        thread2.start();
-        Thread thread3 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                for (;;) {
-                    A.getInstance().test1();
-                }
+            double v = (totalMinutes - totalDays * 480) + 1.0D;
+            double average =
+                    new BigDecimal(v / (60 * totalDays)).setScale(2,
+                            BigDecimal.ROUND_HALF_UP).doubleValue();
+            System.out.println("TotalDays: = " + totalDays + " ,totalMinutes: = " + v + " , average: = " + average);
+            reader.close();
+        } catch (Exception e) {
+            System.err.println("Error: " + e.toString());
+        }
+    }
 
-            }
-        });
-        thread3.setName("4444444444");
-        thread3.start();
+
+    private static boolean isSaturday(String date) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(sdf.parse(date));
+        return calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY;
+    }
+
+
+    private static class Entry {
+        private String mDate;
+        private String mBegin;
+        private String mEnd;
+
+        public Entry(String[] strings) {
+            mDate = strings[3];
+            mBegin = strings[4];
+            mEnd = strings[5];
+        }
+
+        public String getDate() {
+            return mDate;
+        }
+
+        public String getBegin() {
+            return mBegin;
+        }
+
+        public String getEnd() {
+            return mEnd;
+        }
     }
 }

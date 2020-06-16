@@ -1,6 +1,5 @@
 package com.gusi.androidx.module.fragment;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
 
 import com.gusi.androidx.R;
 import com.gusi.androidx.module.lv.ListViewActivity;
@@ -27,14 +28,25 @@ public class BlankFragment extends Fragment {
     public BlankFragment() {
         // Required empty public constructor
 //        isAdded();
+        getLoaderManager().initLoader(1, null, new LoaderManager.LoaderCallbacks<Object>() {
+            @NonNull
+            @Override
+            public Loader<Object> onCreateLoader(int id, @Nullable Bundle args) {
+                return null;
+            }
+
+            @Override
+            public void onLoadFinished(@NonNull Loader<Object> loader, Object data) {
+
+            }
+
+            @Override
+            public void onLoaderReset(@NonNull Loader<Object> loader) {
+
+            }
+        });
     }
 
-    @Override
-    public void onAttach(@NonNull Context context) {
-        Log.w("Fire", "onAttach:32行:" + isAdded());
-        super.onAttach(context);
-        Log.w("Fire", "onAttach:34行:" + isAdded());
-    }
 
     public static BlankFragment newInstance(String from) {
         BlankFragment fragment = new BlankFragment();
