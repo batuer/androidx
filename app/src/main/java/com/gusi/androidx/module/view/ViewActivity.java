@@ -4,20 +4,24 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.LoaderManager;
 import android.content.ContentResolver;
-import android.content.CursorLoader;
+import android.content.ContentUris;
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.HandlerThread;
 import android.provider.CallLog;
 import android.provider.ContactsContract;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.cursoradapter.widget.CursorAdapter;
 
 import com.gusi.androidx.R;
 
@@ -40,76 +44,56 @@ public class ViewActivity extends Activity {
     String[] projection = {ContactsContract.PhoneLookup.DISPLAY_NAME, ContactsContract.CommonDataKinds.Phone.NUMBER};
     private HandlerThread mHandlerThread;
     private Cursor mCursor;
+    private ListView mListView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view);
-//        WindowManager.LayoutParams attributes = getWindow().getAttributes();
-
+        mListView = findViewById(R.id.listView);
     }
 
     public void clickTest(View view) {
         view.requestLayout();
     }
 
-    private boolean b;
 
     public void query(View view) {
         getLoaderManager().initLoader(1, null, new LoaderManager.LoaderCallbacks<Cursor>() {
             @Override
             public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-                CursorLoader cursorLoader = new CursorLoader(ViewActivity.this,
-                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                        new String[]{"display_name", "sort_key", "contact_id", "data1"}, null, null, null);
-                Log.w("Fire", "ViewActivity:onCreateLoader:" + cursorLoader + " , " + Thread.currentThread());
+                MyCursorLoader cursorLoader = new MyCursorLoader(ViewActivity.this,
+                        Uri.parse("content://com.android.contacts/data"),
+                        new String[]{"data1", "data4", "_id"}, null, null, null);
                 return cursorLoader;
             }
 
             @Override
             public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
                 mCursor = cursor;
-                Log.w("Fire_" + cursor, Log.getStackTraceString(new Throwable()));
-                if (!b) {
-                    b = true;
-//                    new MyCursorAdapter(ViewActivity.this, cursor);
-                }
-                while (cursor.moveToNext()) {
-                    // 读取通讯录的姓名
-                    String name =
-                            cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-                    // 读取通讯录的号码
-                    String number =
-                            cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                mListView.setAdapter(new CursorAdapter(ViewActivity.this, cursor) {
+                    @Override
+                    public View newView(Context context, Cursor cursor, ViewGroup parent) {
+                        int item1 = android.R.layout.simple_list_item_1;
+                        View inflate = getLayoutInflater().inflate(item1, parent, false);
+                        return inflate;
+                    }
 
-                    Log.i(TAG, "获取的通讯录是： " + name + "\n" + " number : " + number);
-                }
+                    @Override
+                    public void bindView(View view, Context context, Cursor cursor) {
+                        TextView textView = (TextView) view;
+                        textView.setText(cursor.getString(cursor.getColumnIndex("data1")));
+                    }
+                });
             }
 
             @Override
             public void onLoaderReset(Loader<Cursor> loader) {
-                Log.w("Fire", "ViewActivity:onLoaderReset:" + loader + " , " + Thread.currentThread());
+                Log.w("Fire", "ViewActivity:onLoaderReset:" + loader + " , " + mCursor.isClosed());
             }
         });
-
-
-//        view.invalidate();
-//        if (PermissionUtils.isGranted(permissionList)) {
-//            getConnect();
-//        } else {
-//            PermissionUtils.permission(permissionList).request();
-//        }
     }
 
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        return super.dispatchTouchEvent(ev);
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        return super.onTouchEvent(event);
-    }
 
     // 获取联系人
     private void getConnect() {
@@ -131,28 +115,50 @@ public class ViewActivity extends Activity {
         cursor.close();
     }
 
-    int a = 0;
 
     public void handleThread(View view) {
-        mHandlerThread = new HandlerThread("Ylw----Ylw: " + a++);
-        mHandlerThread.start();
-        Thread thread1 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                long l = System.currentTimeMillis();
-                while ((System.currentTimeMillis() - l) < 5000) {
-                    Log.w("Fire", "ViewActivity:86行:" + l);
-                }
-            }
-        });
-        thread1.setName("Ylw===Ylw: " + a);
-        thread1.start();
+        addContact(NameBuilder.build(), NameBuilder.getMobilePhone());
     }
 
-    public void release(View view) {
-        if (mHandlerThread != null) {
-            mHandlerThread.quit();
-        }
+    public void insertContact(View view) {
+//        if (mHandlerThread != null) {
+//            mHandlerThread.quit();
+//        }
+        addContact("YuLiwen", "123546852565");
+        new Thread(() -> {
+            for (int i = 0; i < 1000; i++) {
+                String build = NameBuilder.build();
+                String mobilePhone = NameBuilder.getMobilePhone();
+                addContact(build, mobilePhone);
+                Log.i(TAG, build + " : " + mobilePhone);
+            }
+
+        }).start();
+    }
+
+    public void addContact(String name, String number) {
+
+        ContentValues values = new ContentValues();
+        // 首先向RawContacts.CONTENT_URI执行一个空值插入，目的是获取系统返回的rawContactId
+        Uri rawContactUri = getContentResolver().insert(
+                ContactsContract.RawContacts.CONTENT_URI, values);
+        long rawContactId = ContentUris.parseId(rawContactUri);
+        // 往data表插入姓名数据
+        values.clear();
+        values.put(ContactsContract.Data.RAW_CONTACT_ID, rawContactId);
+        values.put(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE);// 内容类型
+        values.put(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME, name);
+        getContentResolver().insert(ContactsContract.Data.CONTENT_URI,
+                values);
+
+        // 往data表插入电话数据
+        values.clear();
+        values.put(ContactsContract.Data.RAW_CONTACT_ID, rawContactId);
+        values.put(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
+        values.put(ContactsContract.CommonDataKinds.Phone.NUMBER, number);
+        values.put(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE);
+        getContentResolver().insert(ContactsContract.Data.CONTENT_URI,
+                values);
     }
 
     public void asyncQueryHandler(View view) {
@@ -194,12 +200,13 @@ public class ViewActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Log.w("Fire", "ViewActivity:178行:" + mCursor.isClosed());
-            }
-        }, 3000);
-
+        if (mCursor != null) {
+            Log.w("Fire", "ViewActivity:onDestroy:" + mCursor.isClosed());
+            new Thread(() -> {
+                while (!mCursor.isClosed()) {
+                    Log.w("Fire", "ViewActivity:onDestroy:-------");
+                }
+            }).start();
+        }
     }
 }

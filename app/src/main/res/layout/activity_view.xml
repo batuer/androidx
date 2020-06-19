@@ -28,12 +28,17 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="release"
-        android:text="release" />
+        android:onClick="insertContact"
+        android:text="insertContact" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="asyncQueryHandler"
         android:text="asyncQueryHandler" />
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>
