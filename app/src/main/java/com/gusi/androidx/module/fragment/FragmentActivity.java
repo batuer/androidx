@@ -42,4 +42,9 @@ public class FragmentActivity extends androidx.fragment.app.FragmentActivity {
     public void turn(View view) {
 
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 }
