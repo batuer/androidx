@@ -31,6 +31,10 @@ public class MyCursorLoader extends AsyncTaskLoader<Cursor> {
     Cursor mCursor;
     CancellationSignal mCancellationSignal;
 
+    public Cursor getCursor() {
+        return mCursor;
+    }
+
     /* Runs on a worker thread */
     @Override
     public Cursor loadInBackground() {
@@ -90,6 +94,7 @@ public class MyCursorLoader extends AsyncTaskLoader<Cursor> {
         }
 
         if (oldCursor != null && oldCursor != cursor && !oldCursor.isClosed()) {
+            Log.i(TAG, Log.getStackTraceString(new Throwable()));
             oldCursor.close();
         }
     }
@@ -144,6 +149,7 @@ public class MyCursorLoader extends AsyncTaskLoader<Cursor> {
     @Override
     public void onCanceled(Cursor cursor) {
         if (cursor != null && !cursor.isClosed()) {
+            Log.i(TAG, Log.getStackTraceString(new Throwable()));
             cursor.close();
         }
     }
@@ -154,8 +160,8 @@ public class MyCursorLoader extends AsyncTaskLoader<Cursor> {
 
         // Ensure the loader is stopped
         onStopLoading();
-        Log.i(TAG, Log.getStackTraceString(new Throwable()));
         if (mCursor != null && !mCursor.isClosed()) {
+            Log.i(TAG, Log.getStackTraceString(new Throwable()));
             mCursor.close();
         }
         mCursor = null;

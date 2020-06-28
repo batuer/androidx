@@ -1,8 +1,12 @@
 package com.gusi.androidx.module.fragment;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -10,6 +14,9 @@ import androidx.fragment.app.FragmentTransaction;
 import com.gusi.androidx.R;
 
 public class FragmentActivity extends androidx.fragment.app.FragmentActivity {
+
+    private static final String TAG = "Fire_FragmentActivity";
+    private BlankFragment mBlankFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,13 +27,14 @@ public class FragmentActivity extends androidx.fragment.app.FragmentActivity {
 
     public void addFragment(View view) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.add(R.id.fl_add, BlankFragment.newInstance("Add"));
+        mBlankFragment = BlankFragment.newInstance("Add");
+        transaction.add(R.id.fl_add, mBlankFragment);
         transaction.commit();
     }
 
     public void replaceFragment(View view) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fl_replace, BlankFragment.newInstance("Replace"));
+        transaction.replace(R.id.fl_add, BlankFragment.newInstance("Replace"));
         transaction.commit();
     }
 
@@ -44,7 +52,8 @@ public class FragmentActivity extends androidx.fragment.app.FragmentActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        Log.i(TAG, Log.getStackTraceString(new Throwable()));
     }
 }

@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:id="@+id/ll1"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".module.fragment.FragmentActivity">
@@ -32,34 +32,16 @@
         android:layout_height="100dp"
         android:scaleType="centerInside" />
 
-    <LinearLayout
+
+    <FrameLayout
+        android:id="@+id/fl_add"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:weightSum="2">
+        android:onClick="turn" />
 
-        <FrameLayout
-            android:id="@+id/fl_add"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-
-            android:onClick="turn" />
-
-        <View
-            android:layout_width="wrap_content"
-            android:layout_height="2dp"
-            android:background="#787373" />
-
-        <FrameLayout
-            android:id="@+id/fl_replace"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-    </LinearLayout>
 
     <ListView
         android:id="@+id/list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 </LinearLayout>

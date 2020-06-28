@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.CancellationSignal;
 import android.os.OperationCanceledException;
-import android.util.Log;
 
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
@@ -152,7 +151,6 @@ public class MyCursorLoader extends AsyncTaskLoader<Cursor> {
 
         // Ensure the loader is stopped
         onStopLoading();
-        Log.i(TAG, Log.getStackTraceString(new Throwable()));
         if (mCursor != null && !mCursor.isClosed()) {
             mCursor.close();
         }

@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.HandlerThread;
 import android.provider.CallLog;
@@ -21,9 +22,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.cursoradapter.widget.CursorAdapter;
+import androidx.annotation.RequiresApi;
 
 import com.gusi.androidx.R;
+import com.gusi.androidx.module.db.MyBaseCursorAdapter;
 
 import java.lang.ref.WeakReference;
 
@@ -45,6 +47,7 @@ public class ViewActivity extends Activity {
     private HandlerThread mHandlerThread;
     private Cursor mCursor;
     private ListView mListView;
+    private MyBaseCursorAdapter mCursorAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,7 +60,6 @@ public class ViewActivity extends Activity {
         view.requestLayout();
     }
 
-
     public void query(View view) {
         getLoaderManager().initLoader(1, null, new LoaderManager.LoaderCallbacks<Cursor>() {
             @Override
@@ -68,10 +70,17 @@ public class ViewActivity extends Activity {
                 return cursorLoader;
             }
 
+
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
                 mCursor = cursor;
-                mListView.setAdapter(new CursorAdapter(ViewActivity.this, cursor) {
+                mCursorAdapter = new MyBaseCursorAdapter(ViewActivity.this, cursor) {
+                    @Override
+                    public int getCount() {
+                        return super.getCount();
+                    }
+
                     @Override
                     public View newView(Context context, Cursor cursor, ViewGroup parent) {
                         int item1 = android.R.layout.simple_list_item_1;
@@ -84,7 +93,8 @@ public class ViewActivity extends Activity {
                         TextView textView = (TextView) view;
                         textView.setText(cursor.getString(cursor.getColumnIndex("data1")));
                     }
-                });
+                };
+                mListView.setAdapter(mCursorAdapter);
             }
 
             @Override
@@ -195,6 +205,12 @@ public class ViewActivity extends Activity {
                 }
             }
         }).start();
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+
     }
 
     @Override

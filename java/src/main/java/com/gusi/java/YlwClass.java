@@ -3,6 +3,7 @@ package com.gusi.java;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -20,6 +21,7 @@ public class YlwClass {
             String line = null;
             // 168929 2019/6/29	8:05	17:48
             while ((line = reader.readLine()) != null) {
+                System.out.println(":" +line);
                 String[] strings = line.split(",");
                 if (strings.length != 6) {
                     continue;
@@ -37,13 +39,14 @@ public class YlwClass {
                         afternoon.getTime() - begin.getTime() - 90 * 60 * 1000 + Math.max((end.getTime() - afternoon1.getTime()), 0);
                 totalMinutes += total / (1000 * 60);
             }
+            System.out.println(":" + totalDays);
             double v = (totalMinutes - totalDays * 480) + 1.0D;
             double average =
                     new BigDecimal(v / (60 * totalDays)).setScale(2,
                             BigDecimal.ROUND_HALF_UP).doubleValue();
             System.out.println("TotalDays: = " + totalDays + " ,totalMinutes: = " + v + " , average: = " + average);
             reader.close();
-        } catch (Exception e) {
+        } catch (ParseException | IOException e) {
             System.err.println("Error: " + e.toString());
         }
     }

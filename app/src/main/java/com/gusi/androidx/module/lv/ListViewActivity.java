@@ -59,7 +59,7 @@ public class ListViewActivity extends Activity {
 
     public void addHead(View view) {
         View inflate = View.inflate(this, R.layout.item, null);
-        TextView textView = inflate.findViewById(R.id.tv);
+        TextView textView = inflate.findViewById(R.id.tv_init);
         textView.setText("Head: ");
         mHeadList.add(inflate);
         mListView.addHeaderView(inflate);
@@ -73,7 +73,7 @@ public class ListViewActivity extends Activity {
 
     public void addFoot(View view) {
         View inflate = View.inflate(this, R.layout.item, null);
-        TextView textView = inflate.findViewById(R.id.tv);
+        TextView textView = inflate.findViewById(R.id.tv_init);
         textView.setText("Foot: ");
         mFooterList.add(inflate);
         mListView.addFooterView(inflate);
@@ -102,7 +102,7 @@ public class ListViewActivity extends Activity {
         Dialog dialog = new MyDialog(this);
         dialog.setTitle("Title");
         View inflate = View.inflate(this, R.layout.item, null);
-        TextView textView = inflate.findViewById(R.id.tv);
+        TextView textView = inflate.findViewById(R.id.tv_init);
         textView.setText("Message... ");
         dialog.setContentView(inflate);
         dialog.show();
@@ -124,7 +124,7 @@ public class ListViewActivity extends Activity {
     public void popupWindow(View view) {
         PopupWindow popupWindow = new PopupWindow(this);
         View inflate = View.inflate(this, R.layout.item, null);
-        TextView textView = inflate.findViewById(R.id.tv);
+        TextView textView = inflate.findViewById(R.id.tv_init);
         textView.setText("popupWindow... \n popupWindow");
         popupWindow.setContentView(inflate);
         popupWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
@@ -187,7 +187,7 @@ public class ListViewActivity extends Activity {
                 if (convertView == null) {
                     convertView = getLayoutInflater().inflate(R.layout.item, parent, false);
                 }
-                TextView textView = convertView.findViewById(R.id.tv);
+                TextView textView = convertView.findViewById(R.id.tv_init);
                 textView.setText("Item : " + position);
                 return convertView;
             }
