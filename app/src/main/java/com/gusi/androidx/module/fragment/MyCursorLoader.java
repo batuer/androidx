@@ -19,7 +19,7 @@ import java.util.Arrays;
  * @since 2020/6/17 22:00
  */
 public class MyCursorLoader extends AsyncTaskLoader<Cursor> {
-    private static final String TAG = "Fire_MyCursorLoader";
+    private String TAG = "Fire_MyCursorLoader";
     final ForceLoadContentObserver mObserver;
 
     Uri mUri;
@@ -94,7 +94,7 @@ public class MyCursorLoader extends AsyncTaskLoader<Cursor> {
         }
 
         if (oldCursor != null && oldCursor != cursor && !oldCursor.isClosed()) {
-            Log.i(TAG, Log.getStackTraceString(new Throwable()));
+            Log.i(TAG, "-------deliverResult()-----------" + oldCursor);
             oldCursor.close();
         }
     }
@@ -106,12 +106,14 @@ public class MyCursorLoader extends AsyncTaskLoader<Cursor> {
      */
     public MyCursorLoader(Context context) {
         super(context);
+        TAG = TAG + "_" + this;
         mObserver = new ForceLoadContentObserver();
     }
 
     public MyCursorLoader(Context context, Uri uri, String[] projection, String selection,
                           String[] selectionArgs, String sortOrder) {
         super(context);
+        TAG = TAG + "_" + this;
         mObserver = new ForceLoadContentObserver();
         mUri = uri;
         mProjection = projection;
@@ -132,7 +134,9 @@ public class MyCursorLoader extends AsyncTaskLoader<Cursor> {
         if (mCursor != null) {
             deliverResult(mCursor);
         }
-        if (takeContentChanged() || mCursor == null) {
+        boolean b = takeContentChanged() || mCursor == null;
+        Log.i(TAG + "_" + mCursor, "onStartLoading: " + b);
+        if (b) {
             forceLoad();
         }
     }
@@ -149,7 +153,7 @@ public class MyCursorLoader extends AsyncTaskLoader<Cursor> {
     @Override
     public void onCanceled(Cursor cursor) {
         if (cursor != null && !cursor.isClosed()) {
-            Log.i(TAG, Log.getStackTraceString(new Throwable()));
+            Log.i(TAG, "-------onCanceled()-----------" + cursor);
             cursor.close();
         }
     }
@@ -161,7 +165,7 @@ public class MyCursorLoader extends AsyncTaskLoader<Cursor> {
         // Ensure the loader is stopped
         onStopLoading();
         if (mCursor != null && !mCursor.isClosed()) {
-            Log.i(TAG, Log.getStackTraceString(new Throwable()));
+            Log.i(TAG, "-------onReset-----------" + mCursor);
             mCursor.close();
         }
         mCursor = null;

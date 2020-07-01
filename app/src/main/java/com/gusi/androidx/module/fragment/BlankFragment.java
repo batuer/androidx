@@ -1,10 +1,14 @@
 package com.gusi.androidx.module.fragment;
 
+import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +25,7 @@ import androidx.loader.content.Loader;
 
 import com.gusi.androidx.R;
 import com.gusi.androidx.module.db.MyBaseCursorAdapter;
+import com.gusi.androidx.module.view.NameBuilder;
 
 
 /**
@@ -31,9 +36,14 @@ import com.gusi.androidx.module.db.MyBaseCursorAdapter;
 @RequiresApi(api = Build.VERSION_CODES.M)
 public class BlankFragment extends Fragment {
     private static final String TAG = "Fire_BlankFragment";
-    private Cursor mCursor;
+
     private ListView mListView;
-    private MyBaseCursorAdapter mCursorAdapter;
+
+    private boolean isFirst;
+
+    //    private MyAdapter mBaseAdapter;
+    private MyCursorAdapter mBaseAdapter;
+
     private LoaderManager.LoaderCallbacks<Cursor> mRestartCallback = new LoaderManager.LoaderCallbacks<Cursor>() {
         @NonNull
         @Override
@@ -46,17 +56,24 @@ public class BlankFragment extends Fragment {
 
         @Override
         public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor cursor) {
-            mCursor = cursor;
-            mCursorAdapter.changeCursor(cursor);
-            MyCursorLoader myCursorLoader = (MyCursorLoader) loader;
-            Cursor loaderCursor = myCursorLoader.getCursor();
-            Log.w("Fire_" + cursor, "BlankFragment:54行:" + loader);
-            Log.i(TAG, Log.getStackTraceString(new Throwable()));
+            Log.d(TAG, Log.getStackTraceString(new Throwable()));
+            Log.i(TAG, "restartOnLoadFinished: loader = " + loader + " ,cursor = " + cursor);
+            if (isFirst) {
+                Log.e("Fire",
+                        "restartFinished: = " + loader + " ,cursor = " + cursor + " ," + mListView.isInLayout() + " ,"
+                                + mListView.isLayoutRequested());
+                mBaseAdapter.notifyDataSetChanged();
+                Log.e("Fire",
+                        "restartFinished: = " + loader + " ,cursor = " + cursor + " ," + mListView.isInLayout() + " ,"
+                                + mListView.isLayoutRequested());
+                return;
+            }
+            mBaseAdapter.changeCursor(cursor);
+            isFirst = true;
         }
 
         @Override
         public void onLoaderReset(@NonNull Loader<Cursor> loader) {
-            Log.w("Fire_" + loader, Log.getStackTraceString(new Throwable()));
         }
     };
     private LoaderManager.LoaderCallbacks<Cursor> mInitCallback = new LoaderManager.LoaderCallbacks<Cursor>() {
@@ -72,22 +89,24 @@ public class BlankFragment extends Fragment {
 
         @Override
         public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor cursor) {
-            MyCursorLoader myCursorLoader = (MyCursorLoader) loader;
-            Cursor loaderCursor = myCursorLoader.getCursor();
-            Log.w("Fire_" + cursor, "BlankFragment:77行:" + loaderCursor + " : " + (loaderCursor == null ? "" :
-                    loaderCursor.isClosed()));
-            mCursor = cursor;
-            mCursorAdapter.changeCursor(cursor);
+            Log.d(TAG, Log.getStackTraceString(new Throwable()));
+            Log.i(TAG, "initOnLoadFinished: loader = " + loader + " ,cursor = " + cursor);
+            if (isFirst) {
+                Log.e("Fire", "initFinished: = " + loader + " ,cursor = " + cursor + " ," + mListView.isInLayout() +
+                        " ," + mListView.isLayoutRequested());
+//                mBaseAdapter.notifyDataSetChanged();
+//                Log.e("Fire", "initFinished: = " + loader + " ,cursor = " + cursor + " ," + mListView.isInLayout() +
+//                        " ," + mListView.isLayoutRequested());
+                return;
+            }
+            mBaseAdapter.changeCursor(cursor);
+            isFirst = true;
         }
 
         @Override
         public void onLoaderReset(@NonNull Loader<Cursor> loader) {
-            Log.w("Fire", ":onLoaderReset:" + loader + " , " + mCursor.isClosed());
         }
     };
-
-    public BlankFragment() {
-    }
 
 
     public static BlankFragment newInstance(String from) {
@@ -105,10 +124,12 @@ public class BlankFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_blank, container, false);
         TextView textView = view.findViewById(R.id.tv_init);
         view.findViewById(R.id.tv_restart).setOnClickListener(v -> restart());
-        textView.setText(getArguments().getString("From") + "_" + this.hashCode());
         textView.setOnClickListener(v -> init());
+        view.findViewById(R.id.tv_insert).setOnClickListener(v -> {
+            addContact(NameBuilder.build(), NameBuilder.getMobilePhone());
+        });
         mListView = view.findViewById(R.id.listView);
-        mCursorAdapter = new MyBaseCursorAdapter(getContext(), null) {
+        new MyBaseCursorAdapter(getContext(), null) {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public int getCount() {
@@ -128,8 +149,37 @@ public class BlankFragment extends Fragment {
                 textView.setText(cursor.getString(cursor.getColumnIndex("data1")));
             }
         };
-        mListView.setAdapter(mCursorAdapter);
+
+//        mBaseAdapter = new MyAdapter(getLayoutInflater());
+        mBaseAdapter = new MyCursorAdapter(getActivity(), null);
+        mListView.setAdapter(mBaseAdapter);
         return view;
+    }
+
+    public void addContact(String name, String number) {
+
+        ContentValues values = new ContentValues();
+        // 首先向RawContacts.CONTENT_URI执行一个空值插入，目的是获取系统返回的rawContactId
+        ContentResolver resolver = getActivity().getContentResolver();
+        Uri rawContactUri = resolver.insert(
+                ContactsContract.RawContacts.CONTENT_URI, values);
+        long rawContactId = ContentUris.parseId(rawContactUri);
+        // 往data表插入姓名数据
+        values.clear();
+        values.put(ContactsContract.Data.RAW_CONTACT_ID, rawContactId);
+        values.put(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE);// 内容类型
+        values.put(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME, name);
+        resolver.insert(ContactsContract.Data.CONTENT_URI,
+                values);
+
+        // 往data表插入电话数据
+        values.clear();
+        values.put(ContactsContract.Data.RAW_CONTACT_ID, rawContactId);
+        values.put(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
+        values.put(ContactsContract.CommonDataKinds.Phone.NUMBER, number);
+        values.put(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE);
+        resolver.insert(ContactsContract.Data.CONTENT_URI,
+                values);
     }
 
     private void restart() {
@@ -138,30 +188,5 @@ public class BlankFragment extends Fragment {
 
     private void init() {
         getLoaderManager().initLoader(2, null, mInitCallback);
-    }
-
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        Log.i(TAG, "onDetach: ");
-    }
-
-    @Override
-    public void onDestroy() {
-        if (mCursor == null) {
-            super.onDestroy();
-        } else {
-            Log.w("Fire", "onDestroy:80行:" + isAdded() + " , " + mCursor.isClosed());
-            super.onDestroy();
-            Log.w("Fire", "onDestroy:81行:" + isAdded() + " , " + mCursor.isClosed());
-            if (mCursor != null) {
-                new Thread(() -> {
-                    while (!mCursor.isClosed()) {
-                        Log.w("Fire", "Fragment:onDestroy:-------");
-                    }
-                }).start();
-            }
-        }
     }
 }

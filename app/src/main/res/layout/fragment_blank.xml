@@ -6,8 +6,7 @@
     android:orientation="vertical"
     tools:context=".module.fragment.BlankFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <Button
         android:id="@+id/tv_init"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,12 +15,21 @@
         android:textColor="#000"
         android:textSize="20sp" />
 
-    <TextView
+    <Button
         android:id="@+id/tv_restart"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="restart"
+        android:textColor="#000"
+        android:textSize="20sp" />
+
+    <Button
+        android:id="@+id/tv_insert"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="insert"
         android:textColor="#000"
         android:textSize="20sp" />
 

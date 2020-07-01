@@ -1,12 +1,9 @@
 package com.gusi.androidx.module.fragment;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 
-import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -51,9 +48,4 @@ public class FragmentActivity extends androidx.fragment.app.FragmentActivity {
 
     }
 
-    @Override
-    public void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        Log.i(TAG, Log.getStackTraceString(new Throwable()));
-    }
 }
