@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,7 +25,7 @@ import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 
 import com.gusi.androidx.R;
-import com.gusi.androidx.module.db.MyBaseCursorAdapter;
+import com.gusi.androidx.module.db.CursorAdapter;
 import com.gusi.androidx.module.view.NameBuilder;
 
 
@@ -58,17 +59,18 @@ public class BlankFragment extends Fragment {
         public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor cursor) {
             Log.d(TAG, Log.getStackTraceString(new Throwable()));
             Log.i(TAG, "restartOnLoadFinished: loader = " + loader + " ,cursor = " + cursor);
-            if (isFirst) {
-                Log.e("Fire",
-                        "restartFinished: = " + loader + " ,cursor = " + cursor + " ," + mListView.isInLayout() + " ,"
-                                + mListView.isLayoutRequested());
-                mBaseAdapter.notifyDataSetChanged();
-                Log.e("Fire",
-                        "restartFinished: = " + loader + " ,cursor = " + cursor + " ," + mListView.isInLayout() + " ,"
-                                + mListView.isLayoutRequested());
-                return;
-            }
+//            if (isFirst) {
+//                Log.e("Fire",
+//                        "restartFinished: = " + loader + " ,cursor = " + cursor + " ," + mListView.isInLayout() + " ,"
+//                                + mListView.isLayoutRequested());
+//                mBaseAdapter.notifyDataSetChanged();
+//                Log.e("Fire",
+//                        "restartFinished: = " + loader + " ,cursor = " + cursor + " ," + mListView.isInLayout() + " ,"
+//                                + mListView.isLayoutRequested());
+//                return;
+//            }
             mBaseAdapter.changeCursor(cursor);
+//            mBaseAdapter.setCursor(cursor);
             isFirst = true;
         }
 
@@ -91,15 +93,16 @@ public class BlankFragment extends Fragment {
         public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor cursor) {
             Log.d(TAG, Log.getStackTraceString(new Throwable()));
             Log.i(TAG, "initOnLoadFinished: loader = " + loader + " ,cursor = " + cursor);
-            if (isFirst) {
-                Log.e("Fire", "initFinished: = " + loader + " ,cursor = " + cursor + " ," + mListView.isInLayout() +
-                        " ," + mListView.isLayoutRequested());
-//                mBaseAdapter.notifyDataSetChanged();
+//            if (isFirst) {
 //                Log.e("Fire", "initFinished: = " + loader + " ,cursor = " + cursor + " ," + mListView.isInLayout() +
 //                        " ," + mListView.isLayoutRequested());
-                return;
-            }
+////                mBaseAdapter.notifyDataSetChanged();
+////                Log.e("Fire", "initFinished: = " + loader + " ,cursor = " + cursor + " ," + mListView.isInLayout() +
+////                        " ," + mListView.isLayoutRequested());
+//                return;
+//            }
             mBaseAdapter.changeCursor(cursor);
+//            mBaseAdapter.setCursor(cursor);
             isFirst = true;
         }
 
@@ -117,6 +120,8 @@ public class BlankFragment extends Fragment {
         return fragment;
     }
 
+    private String mName;
+    private String nNumber;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -128,8 +133,11 @@ public class BlankFragment extends Fragment {
         view.findViewById(R.id.tv_insert).setOnClickListener(v -> {
             addContact(NameBuilder.build(), NameBuilder.getMobilePhone());
         });
+        view.findViewById(R.id.tv_update).setOnClickListener(v -> {
+            update(mName, nNumber);
+        });
         mListView = view.findViewById(R.id.listView);
-        new MyBaseCursorAdapter(getContext(), null) {
+        new CursorAdapter(getContext(), null) {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public int getCount() {
@@ -157,10 +165,12 @@ public class BlankFragment extends Fragment {
     }
 
     public void addContact(String name, String number) {
+        mName = name;
+        nNumber = number;
 
-        ContentValues values = new ContentValues();
         // 首先向RawContacts.CONTENT_URI执行一个空值插入，目的是获取系统返回的rawContactId
         ContentResolver resolver = getActivity().getContentResolver();
+        ContentValues values = new ContentValues();
         Uri rawContactUri = resolver.insert(
                 ContactsContract.RawContacts.CONTENT_URI, values);
         long rawContactId = ContentUris.parseId(rawContactUri);
@@ -180,6 +190,35 @@ public class BlankFragment extends Fragment {
         values.put(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE);
         resolver.insert(ContactsContract.Data.CONTENT_URI,
                 values);
+    }
+
+    public void update(String name, String number) {
+        if (name == null || number == null) {
+            Toast.makeText(getActivity(), "is null", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        ContentResolver resolver = getActivity().getContentResolver();
+        ContentValues values = new ContentValues();
+        Uri rawContactUri = resolver.insert(
+                ContactsContract.RawContacts.CONTENT_URI, values);
+        long rawContactId = ContentUris.parseId(rawContactUri);
+        // 往data表插入姓名数据
+        values.clear();
+        values.put(ContactsContract.Data.RAW_CONTACT_ID, rawContactId);
+        values.put(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE);// 内容类型
+        values.put(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME, "name:" + name);
+        resolver.insert(ContactsContract.Data.CONTENT_URI,
+                values);
+
+        // 往data表插入电话数据
+        values.clear();
+        values.put(ContactsContract.Data.RAW_CONTACT_ID, rawContactId);
+        values.put(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
+        values.put(ContactsContract.CommonDataKinds.Phone.NUMBER, "number" + number);
+        values.put(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE);
+
+
+        resolver.update(ContactsContract.Data.CONTENT_URI, values, "data2 = ?", null);
     }
 
     private void restart() {

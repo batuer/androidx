@@ -25,7 +25,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import com.gusi.androidx.R;
-import com.gusi.androidx.module.db.MyBaseCursorAdapter;
+import com.gusi.androidx.module.db.CursorAdapter;
 
 import java.lang.ref.WeakReference;
 
@@ -47,7 +47,7 @@ public class ViewActivity extends Activity {
     private HandlerThread mHandlerThread;
     private Cursor mCursor;
     private ListView mListView;
-    private MyBaseCursorAdapter mCursorAdapter;
+    private CursorAdapter mCursorAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,7 +75,7 @@ public class ViewActivity extends Activity {
             @Override
             public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
                 mCursor = cursor;
-                mCursorAdapter = new MyBaseCursorAdapter(ViewActivity.this, cursor) {
+                mCursorAdapter = new CursorAdapter(ViewActivity.this, cursor) {
                     @Override
                     public int getCount() {
                         return super.getCount();

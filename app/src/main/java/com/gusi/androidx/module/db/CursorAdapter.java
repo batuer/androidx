@@ -25,7 +25,7 @@ import androidx.annotation.WorkerThread;
  * @since 2020/6/12 21:56
  */
 @RequiresApi(api = Build.VERSION_CODES.M)
-public abstract class MyBaseCursorAdapter extends BaseAdapter implements Filterable,
+public abstract class CursorAdapter extends BaseAdapter implements Filterable,
         CursorFilter.CursorFilterClient, ThemedSpinnerAdapter {
 
     /**
@@ -112,12 +112,12 @@ public abstract class MyBaseCursorAdapter extends BaseAdapter implements Filtera
      * use {@link android.app.LoaderManager} with a {@link android.content.CursorLoader}.
      */
     @Deprecated
-    public MyBaseCursorAdapter(Context context, Cursor c) {
+    public CursorAdapter(Context context, Cursor c) {
         init(context, c, FLAG_AUTO_REQUERY);
     }
 
 
-    public MyBaseCursorAdapter(Context context, Cursor c, boolean autoRequery) {
+    public CursorAdapter(Context context, Cursor c, boolean autoRequery) {
         init(context, c, autoRequery ? FLAG_AUTO_REQUERY : FLAG_REGISTER_CONTENT_OBSERVER);
     }
 
@@ -130,7 +130,7 @@ public abstract class MyBaseCursorAdapter extends BaseAdapter implements Filtera
      *                be any combination of {@link #FLAG_AUTO_REQUERY} and
      *                {@link #FLAG_REGISTER_CONTENT_OBSERVER}.
      */
-    public MyBaseCursorAdapter(Context context, Cursor c, int flags) {
+    public CursorAdapter(Context context, Cursor c, int flags) {
         init(context, c, flags);
     }
 

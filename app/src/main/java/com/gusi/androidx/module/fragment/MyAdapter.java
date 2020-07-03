@@ -41,7 +41,7 @@ public class MyAdapter extends BaseAdapter {
             Log.i(TAG, Log.getStackTraceString(new Throwable()));
         }
         mI = mCursor != null && !mCursor.isClosed() ? mCursor.getCount() : 0;
-        Log.w("Fire", "MyAdapter:39行:" + mI + " ,cursorCount = " + cursorCount);
+        Log.d("Fire", "MyAdapter:39行:" + mI + " ,cursorCount = " + cursorCount);
         return mI;
     }
 
