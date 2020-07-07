@@ -135,7 +135,7 @@ public class MyCursorLoader extends AsyncTaskLoader<Cursor> {
             deliverResult(mCursor);
         }
         boolean b = takeContentChanged() || mCursor == null;
-        Log.i(TAG + "_" + mCursor, "onStartLoading: " + b);
+        Log.i(TAG , mCursor+ " :--: " + takeContentChanged());
         if (b) {
             forceLoad();
         }

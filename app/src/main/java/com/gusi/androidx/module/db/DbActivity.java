@@ -10,6 +10,7 @@ import android.database.DataSetObserver;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
@@ -27,7 +28,7 @@ import java.util.Random;
 
 public class DbActivity extends Activity {
 
-    private static final String TAG = "Fire";
+    private static final String TAG = "Fire_DbActivity";
     private ListView mListView;
     private BaseAdapter mBaseAdapter;
     //    private List<String> mList;
@@ -37,6 +38,11 @@ public class DbActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_db);
+        Log.w(TAG, "onCreate: " + this.toString());
+        if (savedInstanceState != null) {
+            Log.d(TAG, Log.getStackTraceString(new Throwable()));
+            Log.e(TAG, savedInstanceState.hashCode() + " :onCreate: " + savedInstanceState.get("this"));
+        }
         mListView = findViewById(R.id.lv);
         mBaseAdapter = new BaseAdapter() {
             @Override
@@ -150,27 +156,7 @@ public class DbActivity extends Activity {
 //        ContentValues contentValues = new ContentValues();
 //        contentValues.put("BIRTH", TimeUtils.getNowString());
 //        DBManger.getInstance().update("Student", contentValues, null, null);
-        int cursorCount = -3;
-        if (mCursor != null) {
-            if (mCursor.isClosed()) {
-                cursorCount = -2;
-            } else {
-                cursorCount = mCursor.getCount();
-            }
-        }
-        Log.w("Fire", "DbActivity:161行:" + cursorCount);
-        if (mCursor != null) {
-            mCursor.close();
-        }
-         cursorCount = -3;
-        if (mCursor != null) {
-            if (mCursor.isClosed()) {
-                cursorCount = -2;
-            } else {
-                cursorCount = mCursor.getCount();
-            }
-        }
-        Log.w("Fire", "DbActivity:173行:" + cursorCount);
+        view.invalidate();
     }
 
     //CREATE TABLE IF NOT EXISTS "Student" ("_id" INTEGER PRIMARY KEY ,"NAME" TEXT,"BIRTH" TEXT,"SEX" boolean,"AGE"
@@ -190,29 +176,38 @@ public class DbActivity extends Activity {
 ////        }
 //        cursor.close();
 //        mBaseAdapter.notifyDataSetChanged();
-        int cursorCount = -3;
-        if (mCursor != null) {
-            if (mCursor.isClosed()) {
-                cursorCount = -2;
-            } else {
-                cursorCount = mCursor.getCount();
-            }
-        }
-        Log.w("Fire", "DbActivity:183行:" + cursorCount);
-        if (mCursor != null) {
-            mCursor.requery();
-        }
-        cursorCount = -3;
-        if (mCursor != null) {
-            if (mCursor.isClosed()) {
-                cursorCount = -2;
-            } else {
-                cursorCount = mCursor.getCount();
-            }
-        }
-        Log.w("Fire", "DbActivity:195行:" + cursorCount);
+//        if (mBaseAdapter != null) {
+//            mBaseAdapter.notifyDataSetInvalidated();
+//        }
+
+        view.requestLayout();
+
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        String value = this.toString();
+        outState.putString("this", value);
+        outState.putByteArray("bys", new byte[1024 * 10]);
+        Log.w(TAG, outState.hashCode() + " :onSaveInstanceState: " + value);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState, PersistableBundle persistentState) {
+        super.onRestoreInstanceState(savedInstanceState, persistentState);
+        Log.d(TAG, Log.getStackTraceString(new Throwable()));
+        Log.w(TAG, "onRestoreInstanceState: " + this.toString());
+        if (savedInstanceState != null) {
+            Log.w(TAG, savedInstanceState.hashCode() + " :onRestoreInstanceState: " + savedInstanceState.get("this"));
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.w(TAG, "onDestroy: "+ this.toString() );
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void load(View view) {

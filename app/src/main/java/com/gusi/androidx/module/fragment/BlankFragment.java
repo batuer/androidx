@@ -42,8 +42,8 @@ public class BlankFragment extends Fragment {
 
     private boolean isFirst;
 
-    //    private MyAdapter mBaseAdapter;
-    private MyCursorAdapter mBaseAdapter;
+    private MyAdapter mBaseAdapter;
+//    private MyCursorAdapter mBaseAdapter;
 
     private LoaderManager.LoaderCallbacks<Cursor> mRestartCallback = new LoaderManager.LoaderCallbacks<Cursor>() {
         @NonNull
@@ -58,19 +58,17 @@ public class BlankFragment extends Fragment {
         @Override
         public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor cursor) {
             Log.d(TAG, Log.getStackTraceString(new Throwable()));
-            Log.i(TAG, "restartOnLoadFinished: loader = " + loader + " ,cursor = " + cursor);
-//            if (isFirst) {
-//                Log.e("Fire",
-//                        "restartFinished: = " + loader + " ,cursor = " + cursor + " ," + mListView.isInLayout() + " ,"
-//                                + mListView.isLayoutRequested());
-//                mBaseAdapter.notifyDataSetChanged();
-//                Log.e("Fire",
-//                        "restartFinished: = " + loader + " ,cursor = " + cursor + " ," + mListView.isInLayout() + " ,"
-//                                + mListView.isLayoutRequested());
-//                return;
-//            }
-            mBaseAdapter.changeCursor(cursor);
-//            mBaseAdapter.setCursor(cursor);
+            Log.i(TAG, "restartOnLoadFinished: loader = " + loader.hashCode() + " ,cursor = " + cursor);
+            if (isFirst) {
+                Log.e("Fire",
+                        "restartFinished: = " + loader + " ,cursor = " + cursor + " ," + mListView.isInLayout() + " ,"
+                                + mListView.isLayoutRequested());
+
+                mBaseAdapter.notifyDataSetInvalidated();
+                return;
+            }
+//            mBaseAdapter.changeCursor(cursor);
+            mBaseAdapter.setCursor(cursor);
             isFirst = true;
         }
 
@@ -92,17 +90,18 @@ public class BlankFragment extends Fragment {
         @Override
         public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor cursor) {
             Log.d(TAG, Log.getStackTraceString(new Throwable()));
-            Log.i(TAG, "initOnLoadFinished: loader = " + loader + " ,cursor = " + cursor);
-//            if (isFirst) {
+            Log.i(TAG, "initOnLoadFinished: loader = " + loader.hashCode() + " ,cursor = " + cursor);
+            if (isFirst) {
+                Log.e("Fire", "initFinished: = " + loader + " ,cursor = " + cursor + " ," + mListView.isInLayout() +
+                        " ," + mListView.isLayoutRequested());
+//                mBaseAdapter.setCursor(cursor);
+//                mBaseAdapter.notifyDataSetInvalidated();
 //                Log.e("Fire", "initFinished: = " + loader + " ,cursor = " + cursor + " ," + mListView.isInLayout() +
 //                        " ," + mListView.isLayoutRequested());
-////                mBaseAdapter.notifyDataSetChanged();
-////                Log.e("Fire", "initFinished: = " + loader + " ,cursor = " + cursor + " ," + mListView.isInLayout() +
-////                        " ," + mListView.isLayoutRequested());
-//                return;
-//            }
-            mBaseAdapter.changeCursor(cursor);
-//            mBaseAdapter.setCursor(cursor);
+                return;
+            }
+//            mBaseAdapter.changeCursor(cursor);
+            mBaseAdapter.setCursor(cursor);
             isFirst = true;
         }
 
@@ -158,10 +157,19 @@ public class BlankFragment extends Fragment {
             }
         };
 
-//        mBaseAdapter = new MyAdapter(getLayoutInflater());
-        mBaseAdapter = new MyCursorAdapter(getActivity(), null);
+        mBaseAdapter = new MyAdapter(getLayoutInflater());
+//        mBaseAdapter = new MyCursorAdapter(getActivity(), null);
         mListView.setAdapter(mBaseAdapter);
         return view;
+    }
+
+    private void restart() {
+        getLoaderManager().restartLoader(1, null, mRestartCallback);
+    }
+
+    private void init() {
+        LoaderManager loaderManager = getLoaderManager();
+        loaderManager.initLoader(2, null, mInitCallback);
     }
 
     public void addContact(String name, String number) {
@@ -221,11 +229,5 @@ public class BlankFragment extends Fragment {
         resolver.update(ContactsContract.Data.CONTENT_URI, values, "data2 = ?", null);
     }
 
-    private void restart() {
-        getLoaderManager().restartLoader(1, null, mRestartCallback);
-    }
 
-    private void init() {
-        getLoaderManager().initLoader(2, null, mInitCallback);
-    }
 }

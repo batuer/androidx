@@ -23,6 +23,13 @@ public class MyCursorAdapter extends CursorAdapter {
     }
 
     @Override
+    public int getCount() {
+        int count = super.getCount();
+        Log.w(TAG, "getCount: " + count);
+        return count;
+    }
+
+    @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         View view = LayoutInflater.from(context).inflate(android.R.layout.simple_list_item_1, parent, false);
         return view;

@@ -1,6 +1,7 @@
 package com.gusi.androidx.module.fragment;
 
 import android.database.Cursor;
+import android.database.DataSetObserver;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,13 +19,20 @@ public class MyAdapter extends BaseAdapter {
     private Cursor mCursor;
     private int mI;
 
+    private MyDataSetObserver mDataSetObserver = new MyDataSetObserver();
+
     public Cursor getCursor() {
         return mCursor;
     }
 
     public void setCursor(Cursor cursor) {
+//        Cursor olCursor = mCursor;
+//        if (olCursor != null) {
+//            olCursor.unregisterDataSetObserver(mDataSetObserver);
+//        }
         mCursor = cursor;
         notifyDataSetChanged();
+//        mCursor.registerDataSetObserver(mDataSetObserver);
     }
 
     public MyAdapter(LayoutInflater inflater) {
@@ -64,5 +72,21 @@ public class MyAdapter extends BaseAdapter {
         TextView textView = (TextView) convertView;
         textView.setText(mCursor.getString(mCursor.getColumnIndex("data1")) + "  count = " + mI);
         return convertView;
+    }
+
+    private class MyDataSetObserver extends DataSetObserver {
+        @Override
+        public void onChanged() {
+            super.onChanged();
+            notifyDataSetChanged();
+            Log.w(TAG, "onChanged: ");
+        }
+
+        @Override
+        public void onInvalidated() {
+            super.onInvalidated();
+            notifyDataSetChanged();
+            Log.w(TAG, "onInvalidated: ");
+        }
     }
 }

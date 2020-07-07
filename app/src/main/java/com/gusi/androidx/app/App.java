@@ -47,7 +47,6 @@ public class App extends Application {
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-                activity.onRestoreInstanceState(savedInstanceState, null);
             }
 
             @Override
