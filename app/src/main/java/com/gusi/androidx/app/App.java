@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
@@ -27,6 +28,7 @@ import com.tencent.bugly.crashreport.CrashReport;
  * @Author ylw  2018/6/20 17:55
  */
 public class App extends Application {
+    private static final String TAG = "App";
     private AppComponent mAppComponent;
     private static App sApp;
 
@@ -42,11 +44,14 @@ public class App extends Application {
         register();
     }
 
+    private int mCount = 0;
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void register() {
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+                Log.w(TAG, (mCount++) + " :onActivityCreated: " + activity);
             }
 
             @Override

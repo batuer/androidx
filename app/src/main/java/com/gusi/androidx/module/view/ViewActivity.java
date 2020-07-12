@@ -3,16 +3,20 @@ package com.gusi.androidx.module.view;
 import android.Manifest;
 import android.app.Activity;
 import android.app.LoaderManager;
+import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.HandlerThread;
+import android.os.SystemClock;
 import android.provider.CallLog;
 import android.provider.ContactsContract;
 import android.util.Log;
@@ -27,13 +31,14 @@ import androidx.annotation.RequiresApi;
 import com.gusi.androidx.R;
 import com.gusi.androidx.module.db.CursorAdapter;
 
-import java.lang.ref.WeakReference;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author Ylw
  * @since 2019/8/24 23:17
  */
 public class ViewActivity extends Activity {
+    private static int mCount = 0;
     private static final String TAG = "Fire";
     private String[] permissionList = new String[]{ // 申请的权限列表
             Manifest.permission.READ_CALL_LOG, Manifest.permission.WRITE_CALL_LOG, Manifest.permission.READ_CONTACTS};
@@ -54,6 +59,15 @@ public class ViewActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view);
         mListView = findViewById(R.id.listView);
+        TextView textView = findViewById(R.id.tv);
+        if (getIntent() != null) {
+            int from = getIntent().getIntExtra("from", -1);
+            if (from != -1) {
+                textView.setText("From: " + from);
+            } else {
+                textView.setText("" + this.toString());
+            }
+        }
     }
 
     public void clickTest(View view) {
@@ -171,58 +185,67 @@ public class ViewActivity extends Activity {
                 values);
     }
 
+    AtomicInteger mAtomicInteger = new AtomicInteger(0);
+
     public void asyncQueryHandler(View view) {
-        MyAsyncQueryHandler asyncQueryHandler = new MyAsyncQueryHandler(getContentResolver()) {
 
-        };
+        for (int i = 0; i < 10; i++) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    for (int i = 0; i < 20000; i++) {
+                        BroadcastReceiver receiver = new BroadcastReceiver() {
+                            @Override
+                            public void onReceive(Context context, Intent intent) {
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                while (true) {
-                    WeakReference<ContentResolver> resolver = asyncQueryHandler.getResolver();
-                    WeakReference<HandlerThread> threadWeakReference = asyncQueryHandler.getThreadWeakReference();
-                    Log.w("Fire", "ViewActivity:115行:" + resolver + " :--: " + threadWeakReference);
-                    if (resolver == null) {
-                        Log.e("Fire", "ViewActivity:116行:" + resolver);
-                    } else {
-                        ContentResolver contentResolver = resolver.get();
-                        if (contentResolver == null) {
-                            Log.e("Fire", "ViewActivity:120行:" + contentResolver);
-                        }
+                            }
+                        };
+                        IntentFilter filter = new IntentFilter();
+                        Intent intent = registerReceiver(receiver, filter);
+                        Log.w(TAG, mAtomicInteger.addAndGet(1) + " : " + intent);
+//                        Intent intent = new Intent(ViewActivity.this, ViewActivity.class);
+//                        intent.putExtra("from", i);
+//                        startActivity(intent);
+                        SystemClock.sleep(10);
                     }
-                    if (threadWeakReference == null) {
-
-                        Log.e("Fire", "ViewActivity:125行:" + threadWeakReference);
-                    } else {
-                        HandlerThread handlerThread = threadWeakReference.get();
-                        if (handlerThread == null) {
-                            Log.e("Fire", "ViewActivity:129行:" + handlerThread);
-                        }
-                    }
-
-                }
-            }
-        }).start();
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (mCursor != null) {
-            Log.w("Fire", "ViewActivity:onDestroy:" + mCursor.isClosed());
-            new Thread(() -> {
-                while (!mCursor.isClosed()) {
-                    Log.w("Fire", "ViewActivity:onDestroy:-------");
+                    mCount = mCount + 100;
                 }
             }).start();
         }
+
+
+//        MyAsyncQueryHandler asyncQueryHandler = new MyAsyncQueryHandler(getContentResolver()) {
+//
+//        };
+//
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//                while (true) {
+//                    WeakReference<ContentResolver> resolver = asyncQueryHandler.getResolver();
+//                    WeakReference<HandlerThread> threadWeakReference = asyncQueryHandler.getThreadWeakReference();
+//                    Log.w("Fire", "ViewActivity:115行:" + resolver + " :--: " + threadWeakReference);
+//                    if (resolver == null) {
+//                        Log.e("Fire", "ViewActivity:116行:" + resolver);
+//                    } else {
+//                        ContentResolver contentResolver = resolver.get();
+//                        if (contentResolver == null) {
+//                            Log.e("Fire", "ViewActivity:120行:" + contentResolver);
+//                        }
+//                    }
+//                    if (threadWeakReference == null) {
+//
+//                        Log.e("Fire", "ViewActivity:125行:" + threadWeakReference);
+//                    } else {
+//                        HandlerThread handlerThread = threadWeakReference.get();
+//                        if (handlerThread == null) {
+//                            Log.e("Fire", "ViewActivity:129行:" + handlerThread);
+//                        }
+//                    }
+//
+//                }
+//            }
+//        }).start();
     }
 }

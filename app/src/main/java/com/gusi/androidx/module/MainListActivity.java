@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -25,8 +27,9 @@ import java.util.List;
  * @since 2019/6/28 23:40
  */
 public class MainListActivity extends ListActivity {
-    private static final String FILTER = "Filter";
+    private static final String TAG = "Fire_MainListActivity";
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +45,6 @@ public class MainListActivity extends ListActivity {
         };
         setListAdapter(adapter);
 
-        getAttachInfo(findViewById(android.R.id.content));
     }
 
     @Override

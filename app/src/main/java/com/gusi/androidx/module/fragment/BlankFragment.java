@@ -69,7 +69,7 @@ public class BlankFragment extends Fragment {
             }
 //            mBaseAdapter.changeCursor(cursor);
             mBaseAdapter.setCursor(cursor);
-            isFirst = true;
+//            isFirst = true;
         }
 
         @Override
@@ -102,7 +102,7 @@ public class BlankFragment extends Fragment {
             }
 //            mBaseAdapter.changeCursor(cursor);
             mBaseAdapter.setCursor(cursor);
-            isFirst = true;
+//            isFirst = true;
         }
 
         @Override
