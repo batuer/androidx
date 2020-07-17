@@ -162,25 +162,24 @@ public class DbActivity extends Activity {
     //CREATE TABLE IF NOT EXISTS "Student" ("_id" INTEGER PRIMARY KEY ,"NAME" TEXT,"BIRTH" TEXT,"SEX" boolean,"AGE"
     // INTEGER,"INTRO" TEXT);
     public void queryStudent(View view) {
-//        Cursor cursor = DBManger.getInstance().query("Student", null, null, null, null, null, null, null);
-////        mList = new ArrayList<>(cursor.getCount());
-////        while (cursor != null && cursor.moveToNext()) {
-////            long id = cursor.getLong(cursor.getColumnIndex("_id"));
-////            String name = cursor.getString(cursor.getColumnIndex("NAME"));
-////            String birth = cursor.getString(cursor.getColumnIndex("BIRTH"));
-////            boolean sex = cursor.getInt(cursor.getColumnIndex("SEX")) == 1 ? true : false;
-////            int age = cursor.getInt(cursor.getColumnIndex("AGE"));
-////            String result = String.format("id=%s, name=%s, birth=%s, sex=%s, age=%s",
-////                    id, name, birth, sex, age);
-////            mList.add(result);
-////        }
-//        cursor.close();
-//        mBaseAdapter.notifyDataSetChanged();
-//        if (mBaseAdapter != null) {
-//            mBaseAdapter.notifyDataSetInvalidated();
+        Cursor cursor = DBManger.getInstance().query("Student", null, null, null, null, null, null, null);
+//        mList = new ArrayList<>(cursor.getCount());
+//        while (cursor != null && cursor.moveToNext()) {
+//            long id = cursor.getLong(cursor.getColumnIndex("_id"));
+//            String name = cursor.getString(cursor.getColumnIndex("NAME"));
+//            String birth = cursor.getString(cursor.getColumnIndex("BIRTH"));
+//            boolean sex = cursor.getInt(cursor.getColumnIndex("SEX")) == 1 ? true : false;
+//            int age = cursor.getInt(cursor.getColumnIndex("AGE"));
+//            String result = String.format("id=%s, name=%s, birth=%s, sex=%s, age=%s",
+//                    id, name, birth, sex, age);
+//            mList.add(result);
 //        }
+        cursor.close();
+        mBaseAdapter.notifyDataSetChanged();
+        if (mBaseAdapter != null) {
+            mBaseAdapter.notifyDataSetInvalidated();
+        }
 
-        view.requestLayout();
 
     }
 

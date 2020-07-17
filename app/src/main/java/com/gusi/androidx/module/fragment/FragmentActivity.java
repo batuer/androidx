@@ -2,13 +2,9 @@ package com.gusi.androidx.module.fragment;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
-import android.view.FrameMetrics;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.ListView;
 
 import androidx.annotation.RequiresApi;
@@ -17,9 +13,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.gusi.androidx.R;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class FragmentActivity extends androidx.fragment.app.FragmentActivity {
 
@@ -31,15 +24,6 @@ public class FragmentActivity extends androidx.fragment.app.FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fragment);
-        Window window = getWindow();
-        View decorView = window.getDecorView();
-        decorView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                finish();
-                Log.e(TAG, "run: finish()");
-            }
-        }, 2000);
 //        window.addOnFrameMetricsAvailableListener(new Window.OnFrameMetricsAvailableListener() {
 //            @Override
 //            public void onFrameMetricsAvailable(Window window, FrameMetrics frameMetrics,
@@ -51,6 +35,14 @@ public class FragmentActivity extends androidx.fragment.app.FragmentActivity {
 //                                .getDrawingTime());
 //            }
 //        }, new Handler());
+
+        View view = getWindow().getDecorView();
+        view.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                post(null);
+            }
+        }, 2000);
     }
 
 
@@ -77,19 +69,6 @@ public class FragmentActivity extends androidx.fragment.app.FragmentActivity {
         mBlankFragment = BlankFragment.newInstance("Add");
         transaction.add(R.id.fl_add, mBlankFragment);
         transaction.commit();
-        view.post(new Runnable() {
-            @Override
-            public void run() {
-                Log.w(TAG, "run: -------");
-            }
-        });
-        view.postOnAnimation(new Runnable() {
-            @Override
-            public void run() {
-                Log.w(TAG, "run: =======");
-            }
-        });
-
     }
 
     public void replaceFragment(View view) {
@@ -106,24 +85,39 @@ public class FragmentActivity extends androidx.fragment.app.FragmentActivity {
         }
         transaction.commit();
     }
-//
-//    @Override
-//    protected void onDestroy() {
-//        Log.d(TAG, Log.getStackTraceString(new Throwable()));
-//        Log.w(TAG, "onDestroy: ");
-//        super.onDestroy();
-//    }
-//
-//    @Override
-//    public void onDetachedFromWindow() {
-//        Log.d(TAG, Log.getStackTraceString(new Throwable()));
-//        super.onDetachedFromWindow();
-//        Log.w(TAG, "onDetachedFromWindow: ");
-//    }
-//
+
+    @Override
+    protected void onDestroy() {
+        Log.d(TAG, Log.getStackTraceString(new Throwable()));
+        Log.w(TAG, "onDestroy: ");
+        super.onDestroy();
+    }
+
+    @Override
+    public void onDetachedFromWindow() {
+        Log.d(TAG, Log.getStackTraceString(new Throwable()));
+        super.onDetachedFromWindow();
+        Log.w(TAG, "onDetachedFromWindow: ");
+    }
+
+    public void post(View v) {
+        View view = getWindow().getDecorView();
+        view.post(new Runnable() {
+            @Override
+            public void run() {
+                Log.w(TAG, "run: post()");
+            }
+        });
+        view.postOnAnimation(new Runnable() {
+            @Override
+            public void run() {
+                Log.e(TAG, "run: postOnAnimation()");
+            }
+        });
+    }
+
 //    @Override
 //    public boolean dispatchTouchEvent(MotionEvent ev) {
-//        Log.d(TAG, Log.getStackTraceString(new Throwable()));
 //        Log.w(TAG, isFinishing() + " : " + isDestroyed() + " : " + ev.toString());
 //        return super.dispatchTouchEvent(ev);
 //    }

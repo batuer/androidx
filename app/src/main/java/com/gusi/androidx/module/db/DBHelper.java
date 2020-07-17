@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 public class DBHelper extends SQLiteOpenHelper {
     // 数据库默认名字
     public static final String DB_NAME = "Ylw.db";
+    public static final String STUDENT_TABLE_NAME = "Student";
 
     public DBHelper(@Nullable Context context, int version) {
         super(context, DB_NAME, null, version);

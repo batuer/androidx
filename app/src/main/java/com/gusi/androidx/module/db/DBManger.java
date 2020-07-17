@@ -16,12 +16,13 @@ public final class DBManger {
     private final Context mContext;
     // 操作表的对象，进行增删改查
     private final SQLiteDatabase mWritableDatabase;
+    private final DBHelper mDbHelper;
 
     private DBManger(Context context) {
         //no instance
         this.mContext = context;
-        DBHelper dbHelper = new DBHelper(context, 1);
-        this.mWritableDatabase = dbHelper.getWritableDatabase();
+        this.mDbHelper = new DBHelper(context, 1);
+        this.mWritableDatabase = mDbHelper.getWritableDatabase();
     }
 
     public static DBManger getInstance() {
@@ -33,6 +34,10 @@ public final class DBManger {
             }
         }
         return sDBManger;
+    }
+
+    public DBHelper getDbHelper() {
+        return mDbHelper;
     }
 
     public SQLiteDatabase getWritableDatabase() {

@@ -26,6 +26,12 @@
         android:onClick="removeFragment"
         android:text="removeFragment" />
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="post"
+        android:text="post" />
+
 
     <FrameLayout
         android:id="@+id/fl_add"

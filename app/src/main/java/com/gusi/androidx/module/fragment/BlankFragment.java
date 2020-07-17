@@ -123,8 +123,15 @@ public class BlankFragment extends Fragment {
     private String nNumber;
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.d(TAG, Log.getStackTraceString(new Throwable()));
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d(TAG, Log.getStackTraceString(new Throwable()));
         View view = inflater.inflate(R.layout.fragment_blank, container, false);
         TextView textView = view.findViewById(R.id.tv_init);
         view.findViewById(R.id.tv_restart).setOnClickListener(v -> restart());
@@ -201,6 +208,7 @@ public class BlankFragment extends Fragment {
     }
 
     public void update(String name, String number) {
+        getFragmentManager();
         if (name == null || number == null) {
             Toast.makeText(getActivity(), "is null", Toast.LENGTH_SHORT).show();
             return;

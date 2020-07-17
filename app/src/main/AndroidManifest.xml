@@ -28,15 +28,21 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".module.fragment.FragmentActivity"
-            android:label="@string/fragment"
-            ></activity>
+        <provider
+            android:name=".module.provider.MyContentProvider"
+            android:authorities="com.gusi.provider"
+            android:enabled="true"
+            android:exported="true"></provider>
+
+        <activity
+            android:name=".module.fragment.FragmentActivity"
+            android:label="@string/fragment" />
         <activity
             android:name=".module.jni.JniActivity"
             android:label="@string/jni" />
         <activity
-            android:configChanges="keyboard|screenSize|orientation"
             android:name=".module.db.DbActivity"
+            android:configChanges="keyboard|screenSize|orientation"
             android:label="@string/db" />
 
         <service
