@@ -42,6 +42,15 @@
         android:textColor="#000"
         android:textSize="20sp" />
 
+    <Button
+        android:id="@+id/tv_invalidated"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="notifyDataSetInvalidated"
+        android:textColor="#000"
+        android:textSize="20sp" />
+
     <com.gusi.androidx.module.fragment.MyListView
         android:id="@+id/listView"
         android:layout_width="match_parent"

@@ -1,38 +1,33 @@
 package com.gusi.androidx.module.lv;
 
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.app.Dialog;
-import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.Transformation;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import androidx.core.view.ViewCompat;
-
+import com.blankj.utilcode.util.TimeUtils;
 import com.gusi.androidx.R;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
-public class ListViewActivity extends Activity {
+public class ListViewActivity extends Activity implements AdapterView.OnItemClickListener {
+    private static final String TAG = "Fire_ListView";
     private ListView mListView;
     private BaseAdapter mAdapter;
-    private TextView mHeadView;
-    private TextView mFootView;
-
     private List<String> mItemList = new ArrayList<>();
-    private List<View> mHeadList = new ArrayList<>();
-    private List<View> mFooterList = new ArrayList<>();
 
 
     @Override
@@ -44,56 +39,17 @@ public class ListViewActivity extends Activity {
         mListView = findViewById(R.id.list);
         mAdapter = getAdapter(false, 5);
         mListView.setAdapter(mAdapter);
+        mListView.setOnItemClickListener(this);
     }
 
     public void addItem(View view) {
-        mItemList.add("Item: ");
+        mItemList.add("Item: " + TimeUtils.getNowMills());
         mAdapter.notifyDataSetChanged();
     }
 
     public void removeItem(View view) {
         if (!mItemList.isEmpty()) {
             mAdapter.notifyDataSetChanged();
-        }
-    }
-
-    public void addHead(View view) {
-        View inflate = View.inflate(this, R.layout.item, null);
-        TextView textView = inflate.findViewById(R.id.tv_init);
-        textView.setText("Head: ");
-        mHeadList.add(inflate);
-        mListView.addHeaderView(inflate);
-        Log.w("Fire", "93行:" + ViewCompat.getLayoutDirection(inflate));
-
-    }
-
-    public void removeHead(View view) {
-        mHeadList.get(0).setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
-    }
-
-    public void addFoot(View view) {
-        View inflate = View.inflate(this, R.layout.item, null);
-        TextView textView = inflate.findViewById(R.id.tv_init);
-        textView.setText("Foot: ");
-        mFooterList.add(inflate);
-        mListView.addFooterView(inflate);
-        Log.w("Fire", "112:" + ViewCompat.getLayoutDirection(inflate));
-    }
-
-    public void removeFoot(View view) {
-        LinearLayout linearLayout = findViewById(R.id.ll);
-        test(linearLayout);
-
-    }
-
-    private void test(LinearLayout linearLayout) {
-        for (int i = 0; i < linearLayout.getChildCount(); i++) {
-            View child = linearLayout.getChildAt(i);
-            if (child instanceof LinearLayout) {
-                test((LinearLayout) child);
-            } else {
-                boolean b = child.hasWindowFocus();
-            }
         }
     }
 
@@ -109,21 +65,10 @@ public class ListViewActivity extends Activity {
 
     }
 
-    public String getTopActivity(Context context) {
-        android.app.ActivityManager manager =
-                (android.app.ActivityManager) context.getSystemService(context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningTaskInfo> runningTaskInfos = manager.getRunningTasks(1);
-
-        if (runningTaskInfos != null) {
-            return (runningTaskInfos.get(0).topActivity).toString();
-        } else
-            return null;
-    }
-
 
     public void popupWindow(View view) {
-        PopupWindow popupWindow = new PopupWindow(this);
         View inflate = View.inflate(this, R.layout.item, null);
+        PopupWindow popupWindow = new PopupWindow(getApplicationContext());
         TextView textView = inflate.findViewById(R.id.tv_init);
         textView.setText("popupWindow... \n popupWindow");
         popupWindow.setContentView(inflate);
@@ -133,43 +78,13 @@ public class ListViewActivity extends Activity {
         popupWindow.setFocusable(true);
     }
 
-    public void dynamic(View view) {
-        mListView.setAdapter(getAdapter(true, 10));
-    }
-
-    public void static1(View view) {
-        mListView.setAdapter(getAdapter(false, 20));
-    }
-
-
-    boolean mIsDynamic = false;
-
-    public void notify(View view) {
-        mIsDynamic = true;
-        BaseAdapter adapter = (BaseAdapter) mListView.getAdapter();
-        adapter.notifyDataSetChanged();
-    }
-
-    public void requestLayout(View view) {
-        mIsDynamic = false;
-        mListView.requestLayout();
-    }
 
     private BaseAdapter getAdapter(boolean isDynamic, int count) {
         return new BaseAdapter() {
             @Override
             public int getCount() {
-                int realCount = mIsDynamic ? new Random().nextInt(10) + 2 : count;
-//                int count = isDynamic ? mCount : 20;
-                int itemCount = mListView.getCount();
-                Log.w("Fire", "ListViewActivity:162行:" + itemCount + " : " + count);
-                Log.i("Fire_" + itemCount + " , " + count, Log.getStackTraceString(new Throwable()));
-                if (itemCount != 0 && itemCount != count) {
-                    Log.e("Fire", "ListViewActivity:152行:" + itemCount + " : " + count);
-                    notifyDataSetInvalidated();
-                    return 0;
-                }
-                return realCount;
+                Log.i(TAG, "getCount: ");
+                return mItemList.size();
             }
 
             @Override
@@ -184,13 +99,106 @@ public class ListViewActivity extends Activity {
 
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
+                Log.d(TAG, Log.getStackTraceString(new Throwable()));
                 if (convertView == null) {
                     convertView = getLayoutInflater().inflate(R.layout.item, parent, false);
                 }
                 TextView textView = convertView.findViewById(R.id.tv_init);
-                textView.setText("Item : " + position);
+                textView.setText(mItemList.get(position));
                 return convertView;
             }
         };
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        Log.d(TAG, Log.getStackTraceString(new Throwable("Touch")));
+        return super.dispatchTouchEvent(ev);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.e(TAG, "onDestroy: ");
+        Log.d(TAG, Log.getStackTraceString(new Throwable("OnDestroy")));
+    }
+
+    @Override
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        Log.d(TAG, Log.getStackTraceString(new Throwable("Ylw")));
+        Log.e(TAG, "onDetachedFromWindow: ");
+    }
+
+    /**
+     * 删除Item动画
+     *
+     * @param view     所要删除的convertView
+     * @param position
+     */
+    int count = 0;
+
+    private void deleteItem(View view, final int position) {
+        count++;
+        if (count == 8) {
+            finish();
+            Log.e(TAG, "finish(): ");
+        }
+        Animation.AnimationListener animationListener = new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mItemList.remove(position);
+                mAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        };
+        collapse(view, animationListener);
+    }
+
+    /**
+     * Item缩放的动画
+     *
+     * @param view
+     * @param animationListener 这个Item动画不仅仅可以缩小高度，也可以左右滑动删除等
+     */
+    public void collapse(final View view, Animation.AnimationListener animationListener) {
+        final int originHeight = view.getMeasuredHeight();
+        Animation animation = new Animation() {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                if (interpolatedTime == 1.0f) {
+                    view.getLayoutParams().height = originHeight;//更改部分避免删除两个Item
+                } else {
+                    view.getLayoutParams().height = originHeight - (int) (originHeight * interpolatedTime);
+                }
+                view.requestLayout();
+            }
+
+            @Override
+            public boolean willChangeBounds() {
+                return true;
+            }
+        };
+        animation.setAnimationListener(animationListener);
+        animation.setDuration(300);
+        view.startAnimation(animation);
+    }
+
+    public void io(View view) {
+
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        deleteItem(view, position);
     }
 }

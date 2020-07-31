@@ -1,6 +1,5 @@
 package com.gusi.androidx.module.db;
 
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -20,13 +19,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.blankj.utilcode.util.TimeUtils;
 import com.gusi.androidx.R;
 
 import java.util.Random;
 
-public class DbActivity extends Activity {
+public class DbActivity extends AppCompatActivity {
 
     private static final String TAG = "Fire_DbActivity";
     private ListView mListView;
@@ -205,7 +206,7 @@ public class DbActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.w(TAG, "onDestroy: "+ this.toString() );
+        Log.w(TAG, "onDestroy: " + this.toString());
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -265,6 +266,14 @@ public class DbActivity extends Activity {
                 Log.w("Fire", "onChange:" + selfChange + " : " + uri);
             }
         });
+    }
+
+    public void fragment(View view) {
+        findViewById(R.id.ll).setVisibility(View.GONE);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.add(R.id.fl, DbFragment.newInstance());
+        transaction.commit();
+        Log.w(TAG, "fragment: ");
     }
 
 

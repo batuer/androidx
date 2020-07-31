@@ -57,19 +57,7 @@ public class BlankFragment extends Fragment {
 
         @Override
         public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor cursor) {
-            Log.d(TAG, Log.getStackTraceString(new Throwable()));
-            Log.i(TAG, "restartOnLoadFinished: loader = " + loader.hashCode() + " ,cursor = " + cursor);
-            if (isFirst) {
-                Log.e("Fire",
-                        "restartFinished: = " + loader + " ,cursor = " + cursor + " ," + mListView.isInLayout() + " ,"
-                                + mListView.isLayoutRequested());
-
-                mBaseAdapter.notifyDataSetInvalidated();
-                return;
-            }
-//            mBaseAdapter.changeCursor(cursor);
             mBaseAdapter.setCursor(cursor);
-//            isFirst = true;
         }
 
         @Override
@@ -89,20 +77,7 @@ public class BlankFragment extends Fragment {
 
         @Override
         public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor cursor) {
-            Log.d(TAG, Log.getStackTraceString(new Throwable()));
-            Log.i(TAG, "initOnLoadFinished: loader = " + loader.hashCode() + " ,cursor = " + cursor);
-            if (isFirst) {
-                Log.e("Fire", "initFinished: = " + loader + " ,cursor = " + cursor + " ," + mListView.isInLayout() +
-                        " ," + mListView.isLayoutRequested());
-//                mBaseAdapter.setCursor(cursor);
-//                mBaseAdapter.notifyDataSetInvalidated();
-//                Log.e("Fire", "initFinished: = " + loader + " ,cursor = " + cursor + " ," + mListView.isInLayout() +
-//                        " ," + mListView.isLayoutRequested());
-                return;
-            }
-//            mBaseAdapter.changeCursor(cursor);
             mBaseAdapter.setCursor(cursor);
-//            isFirst = true;
         }
 
         @Override
@@ -119,19 +94,13 @@ public class BlankFragment extends Fragment {
         return fragment;
     }
 
+
     private String mName;
     private String nNumber;
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Log.d(TAG, Log.getStackTraceString(new Throwable()));
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d(TAG, Log.getStackTraceString(new Throwable()));
         View view = inflater.inflate(R.layout.fragment_blank, container, false);
         TextView textView = view.findViewById(R.id.tv_init);
         view.findViewById(R.id.tv_restart).setOnClickListener(v -> restart());
@@ -141,6 +110,12 @@ public class BlankFragment extends Fragment {
         });
         view.findViewById(R.id.tv_update).setOnClickListener(v -> {
             update(mName, nNumber);
+            mBaseAdapter.notifyDataSetInvalidated();
+        });
+        view.findViewById(R.id.tv_invalidated).setOnClickListener(v -> {
+            getLoaderManager().destroyLoader(1);
+            getLoaderManager().destroyLoader(2);
+            mBaseAdapter.notifyDataSetInvalidated();
         });
         mListView = view.findViewById(R.id.listView);
         new CursorAdapter(getContext(), null) {
@@ -208,7 +183,9 @@ public class BlankFragment extends Fragment {
     }
 
     public void update(String name, String number) {
-        getFragmentManager();
+        Log.w(TAG, "update: "+ getFragmentManager() );
+        Log.w(TAG, "update: " + getChildFragmentManager() );
+
         if (name == null || number == null) {
             Toast.makeText(getActivity(), "is null", Toast.LENGTH_SHORT).show();
             return;

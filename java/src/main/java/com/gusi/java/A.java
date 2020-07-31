@@ -5,53 +5,43 @@ package com.gusi.java;
  * @since 2020/5/12 23:10
  */
 public class A {
-    private B mB;
-
-    private A() {
-        // no instance
-    }
-
-    public static A getInstance() {
-        return Holder.single;
-    }
-
-    private static final class Holder {
-        private static final A single = new A();
-    }
-
-    public void setB(B b) {
-        mB = b;
-    }
+    private B b;
+    private int num = -1;
 
     public void test() {
-        B b = mB;
-        if (mB != null) {
-
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    System.out.println(num + " :====: " + b);
+                }
             }
-            try {
-                mB.test();
-            } catch (Exception e) {
-                System.err.println(mB +" :---------------------: " + b);
-            }
-
-        }
+        }).start();
     }
+//        -1:====:null
+//        -1:====:null
+//        ------------------------------
+//        -1:====:null
+//        -1:====:null
+//        -1:====:null
+//        -1:====:null
+//        -1:====:null
+//        -------------:com.gusi.java.B@2a139a55
+//-1:====:com.gusi.java.B@2a139a55
+//-------------:1
+//        1:====:com.gusi.java.B@2a139a55
+//1:====:com.gusi.java.B@2a139a55
 
     public void test1() {
-        B b = mB;
-        if (b != null) {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            b.test();
-
+        try {
+            Thread.sleep(1);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+        System.out.println("------------------------------");
+        b = new B();
+        System.out.println("-------------:" + b);
+        num = 1;
+        System.out.println("-------------:" + num);
     }
-
 }

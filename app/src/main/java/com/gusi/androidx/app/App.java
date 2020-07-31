@@ -3,12 +3,16 @@ package com.gusi.androidx.app;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Application;
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
 import androidx.annotation.RequiresApi;
+import androidx.fragment.app.FragmentManager;
+import androidx.multidex.MultiDex;
 
 import com.blankj.utilcode.util.PermissionUtils;
 import com.blankj.utilcode.util.PhoneUtils;
@@ -33,6 +37,12 @@ public class App extends Application {
     private static App sApp;
 
     @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
+
+    @Override
     public void onCreate() {
         super.onCreate();
         Utils.init(this);
@@ -41,6 +51,7 @@ public class App extends Application {
         initBugly();
         DBManger.getInstance();
         TooLargeTool.startLogging(this);
+        FragmentManager.enableDebugLogging(true);
         register();
     }
 
@@ -105,9 +116,6 @@ public class App extends Application {
         Beta.canShowApkInfo = true;
         Bugly.setIsDevelopmentDevice(getApplicationContext(), false);
         Bugly.init(getApplicationContext(), "0000000", true);
-        if (PermissionUtils.isGranted(Manifest.permission.READ_PHONE_STATE)) {
-            CrashReport.setUserId("IMEI:" + PhoneUtils.getDeviceId());
-        }
         //主动检查更新
         Beta.upgradeStateListener = new UpgradeStateListener() {
             @Override

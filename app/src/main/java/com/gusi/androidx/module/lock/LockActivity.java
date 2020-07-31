@@ -1,13 +1,17 @@
 package com.gusi.androidx.module.lock;
 
-import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.DataSetObserver;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Parcel;
 import android.os.RemoteException;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 
@@ -17,8 +21,6 @@ import com.gusi.androidx.base.BaseActivity;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.concurrent.Callable;
-import java.util.concurrent.FutureTask;
 
 public class LockActivity extends BaseActivity {
     private static final String TAG = "LockActivity";
@@ -142,7 +144,7 @@ public class LockActivity extends BaseActivity {
                     from.debit(amount);
                     to.credit(amount);
                     Log.d(TAG, "transfer: " + "线程【{}】从【{}】账户转账到【{}】账户【{}】元钱成功" + Thread.currentThread().getName()
-                        + from.name + to.name + amount);
+                            + from.name + to.name + amount);
                 }
             }
         }
@@ -190,8 +192,7 @@ public class LockActivity extends BaseActivity {
     /**
      * 应用启动状态跟踪 一般写在application里面的attachBaseContext()方法里面，因为这个方法时机最早
      *
-     * @param context
-     *            context
+     * @param context context
      * @throws Exception
      */
     public static void hookHandler(Context context) throws Exception {
@@ -206,7 +207,7 @@ public class LockActivity extends BaseActivity {
         Field mH = activityThreadClass.getDeclaredField("mH");
         mH.setAccessible(true);
         // 获取mH私有字段的值
-        Handler handler = (Handler)mH.get(activityThread);
+        Handler handler = (Handler) mH.get(activityThread);
         // 反射获取Handler中原始的mCallBack字段
         Field mCallBack = Handler.class.getDeclaredField("mCallback");
         mCallBack.setAccessible(true);
@@ -215,19 +216,30 @@ public class LockActivity extends BaseActivity {
     }
 
     public void Broadcast(View view) {
-        Log.w("Fire", "LockActivity:218行:" );
         Intent intent = new Intent();
         intent.setAction("com.gusi.ylwylw");
         sendOrderedBroadcast(intent, "com.gusi.ylw");
-        Log.w("Fire", "LockActivity:222行:" );
+        Log.w("Fire", "LockActivity:Broadcast:end");
     }
 
     public void Broadcast1(View view) {
-        Log.w("Fire", "LockActivity:226行:" );
-        Intent intent = new Intent();
-        intent.setComponent(new ComponentName("com.tencent.mm", "com.tencent.mm.ui.LauncherUI"));
-        startActivity(intent);
-        Log.d("Fire", "LockActivity:220行:" + intent);
+
+        ContentResolver resolver = getContentResolver();
+        Cursor cursor = resolver.query(Uri.parse("content://com.android.contacts/data"), new String[]{"data1", "data4"
+                , "_id"}, null, null, null);
+        Log.e(TAG, "Broadcast1: " + cursor.getCount());
+        cursor.registerDataSetObserver(new DataSetObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+            }
+
+            @Override
+            public void onInvalidated() {
+                super.onInvalidated();
+            }
+        });
+
     }
 
     public void Ams(View view) {
@@ -235,9 +247,10 @@ public class LockActivity extends BaseActivity {
             Class<?> aClass = Class.forName("android.os.ServiceManager");
             Method method = aClass.getMethod("getService", String.class);
             Object invoke = method.invoke(null, "activity");
-            IBinder iBinder = (IBinder)invoke;
+            Log.w(TAG, "Ams: " + invoke);
+            IBinder iBinder = (IBinder) invoke;
 
-            for (int i = 0; i < 1; i++) {
+            for (int i = 0; i < 10; i++) {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -253,6 +266,7 @@ public class LockActivity extends BaseActivity {
                             } catch (RemoteException e) {
                                 Log.e("Fire", "LockActivity:264行:" + name + " : " + e.toString());
                             }
+                            SystemClock.sleep(1);
                         }
                     }
                 }).start();
@@ -261,15 +275,6 @@ public class LockActivity extends BaseActivity {
         } catch (Exception e) {
             Log.e("Fire", "LockActivity:251行:" + e.toString());
         }
-
-        FutureTask futureTask = new FutureTask(new Callable() {
-            @Override
-            public Object call() throws Exception {
-                return null;
-            }
-        });
-        futureTask.run();
-
     }
 
     /**

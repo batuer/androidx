@@ -3,15 +3,16 @@ package com.gusi.java;
 public class YlwClass {
 
     public static void main(String[] args) {
-        MyThread myThread = new MyThread(new Runnable() {
-            @Override
-            public void run() {
-                System.out.println("==========run===========");
-            }
-        });
-        System.out.println("=========" + myThread.isAlive());
-        myThread.start();
-        System.out.println(myThread.getPriority() + "-----" + myThread.isAlive());
+        A a = new A();
+        a.test();
+        a.test1();
+        try {
+            Thread.sleep(3);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.exit(0);
+
     }
 
     static class MyThread extends Thread {

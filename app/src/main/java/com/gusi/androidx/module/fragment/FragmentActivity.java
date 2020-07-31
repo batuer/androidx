@@ -14,10 +14,11 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.gusi.androidx.R;
 
+import java.io.PrintWriter;
+
 public class FragmentActivity extends androidx.fragment.app.FragmentActivity {
 
     private static final String TAG = "Fire_FragmentActivity";
-    private BlankFragment mBlankFragment;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -36,15 +37,7 @@ public class FragmentActivity extends androidx.fragment.app.FragmentActivity {
 //            }
 //        }, new Handler());
 
-        View view = getWindow().getDecorView();
-        view.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                post(null);
-            }
-        }, 2000);
     }
-
 
     private void get(ViewGroup viewGroup) {
 
@@ -65,9 +58,11 @@ public class FragmentActivity extends androidx.fragment.app.FragmentActivity {
     }
 
     public void addFragment(View view) {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        mBlankFragment = BlankFragment.newInstance("Add");
-        transaction.add(R.id.fl_add, mBlankFragment);
+        FragmentManager supportFragmentManager = getSupportFragmentManager();
+        Log.w(TAG, "addFragment: " + supportFragmentManager);
+        FragmentTransaction transaction = supportFragmentManager.beginTransaction();
+        BlankFragment blankFragment = BlankFragment.newInstance("Add");
+        transaction.add(R.id.fl_add, blankFragment);
         transaction.commit();
     }
 
@@ -86,39 +81,4 @@ public class FragmentActivity extends androidx.fragment.app.FragmentActivity {
         transaction.commit();
     }
 
-    @Override
-    protected void onDestroy() {
-        Log.d(TAG, Log.getStackTraceString(new Throwable()));
-        Log.w(TAG, "onDestroy: ");
-        super.onDestroy();
-    }
-
-    @Override
-    public void onDetachedFromWindow() {
-        Log.d(TAG, Log.getStackTraceString(new Throwable()));
-        super.onDetachedFromWindow();
-        Log.w(TAG, "onDetachedFromWindow: ");
-    }
-
-    public void post(View v) {
-        View view = getWindow().getDecorView();
-        view.post(new Runnable() {
-            @Override
-            public void run() {
-                Log.w(TAG, "run: post()");
-            }
-        });
-        view.postOnAnimation(new Runnable() {
-            @Override
-            public void run() {
-                Log.e(TAG, "run: postOnAnimation()");
-            }
-        });
-    }
-
-//    @Override
-//    public boolean dispatchTouchEvent(MotionEvent ev) {
-//        Log.w(TAG, isFinishing() + " : " + isDestroyed() + " : " + ev.toString());
-//        return super.dispatchTouchEvent(ev);
-//    }
 }
