@@ -25,6 +25,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.blankj.utilcode.util.TimeUtils;
 import com.gusi.androidx.R;
 
+import java.io.PrintWriter;
 import java.util.Random;
 
 public class DbActivity extends AppCompatActivity {
@@ -312,5 +313,11 @@ public class DbActivity extends AppCompatActivity {
                 textView.setText(cursor.getString(cursor.getColumnIndex("BIRTH")));
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        dump("Ylw",null,new PrintWriter(System.out,true),null);
+        super.onBackPressed();
     }
 }

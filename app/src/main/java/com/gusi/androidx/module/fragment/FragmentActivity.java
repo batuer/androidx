@@ -1,5 +1,6 @@
 package com.gusi.androidx.module.fragment;
 
+import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import androidx.annotation.RequiresApi;
+import androidx.core.util.LogWriter;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -81,4 +83,10 @@ public class FragmentActivity extends androidx.fragment.app.FragmentActivity {
         transaction.commit();
     }
 
+    @SuppressLint("RestrictedApi")
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        dump("Ylw", null, new PrintWriter(new LogWriter("Ylw")), null);
+    }
 }

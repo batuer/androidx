@@ -28,11 +28,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".module.rcv.RcyActivity"
+            android:label="@string/rcv"></activity>
+
         <provider
             android:name=".module.provider.MyContentProvider"
             android:authorities="com.gusi.provider"
             android:enabled="true"
-            android:exported="true"></provider>
+            android:exported="true" />
 
         <activity
             android:name=".module.fragment.FragmentActivity"

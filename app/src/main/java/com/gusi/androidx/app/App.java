@@ -1,9 +1,7 @@
 package com.gusi.androidx.app;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 import android.os.Build;
@@ -14,8 +12,6 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.FragmentManager;
 import androidx.multidex.MultiDex;
 
-import com.blankj.utilcode.util.PermissionUtils;
-import com.blankj.utilcode.util.PhoneUtils;
 import com.blankj.utilcode.util.Utils;
 import com.gu.toolargetool.TooLargeTool;
 import com.gusi.androidx.di.component.AppComponent;
@@ -26,7 +22,6 @@ import com.gusi.androidx.module.db.DBManger;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.upgrade.UpgradeStateListener;
-import com.tencent.bugly.crashreport.CrashReport;
 
 /**
  * @Author ylw  2018/6/20 17:55
@@ -53,6 +48,7 @@ public class App extends Application {
         TooLargeTool.startLogging(this);
         FragmentManager.enableDebugLogging(true);
         register();
+//        getMainLooper().setMessageLogging(new LogPrinter(4, "Ylw"));
     }
 
     private int mCount = 0;
