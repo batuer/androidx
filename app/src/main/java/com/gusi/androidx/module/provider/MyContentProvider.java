@@ -72,9 +72,9 @@ public class MyContentProvider extends ContentProvider {
                         String[] selectionArgs, String sortOrder) {
         Log.w(TAG, Thread.currentThread().getName() + " :query: " + uri + " : " + selection);
         if (!TextUtils.isEmpty(selection)) {
-            int time = Integer.parseInt(selection);
-            long start = System.currentTimeMillis();
-            while ((System.currentTimeMillis() - start) < time * 1000) {
+            boolean b = Boolean.parseBoolean(selection);
+            if (b) {
+                throw new IllegalArgumentException("Selection_Ylw");
             }
         }
 

@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.android.vcard;
+package com.gusi.vcard;
 
-import com.android.vcard.VCardUtils.PhoneNumberUtilsPort;
+import com.gusi.vcard.VCardUtils.PhoneNumberUtilsPort;
 
 import android.accounts.Account;
 import android.content.ContentProviderOperation;

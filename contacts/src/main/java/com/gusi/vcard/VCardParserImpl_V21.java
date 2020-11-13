@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.android.vcard;
+package com.gusi.vcard;
 
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 
-import com.android.vcard.exception.VCardAgentNotSupportedException;
-import com.android.vcard.exception.VCardException;
-import com.android.vcard.exception.VCardInvalidCommentLineException;
-import com.android.vcard.exception.VCardInvalidLineException;
-import com.android.vcard.exception.VCardVersionException;
+import com.gusi.vcard.exception.VCardAgentNotSupportedException;
+import com.gusi.vcard.exception.VCardException;
+import com.gusi.vcard.exception.VCardInvalidCommentLineException;
+import com.gusi.vcard.exception.VCardInvalidLineException;
+import com.gusi.vcard.exception.VCardVersionException;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -2,7 +2,6 @@ package com.gusi.androidx.module.lock;
 
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.net.Uri;
@@ -11,9 +10,10 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Parcel;
 import android.os.RemoteException;
-import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
+
+import androidx.annotation.NonNull;
 
 import com.gusi.androidx.R;
 import com.gusi.androidx.app.App;
@@ -216,12 +216,29 @@ public class LockActivity extends BaseActivity {
     }
 
     public void Broadcast(View view) {
-        Intent intent = new Intent();
-        intent.setAction("com.gusi.ylwylw");
-        sendOrderedBroadcast(intent, "com.gusi.ylw");
-        Log.w("Fire", "LockActivity:Broadcast:end");
+//        Intent intent = new Intent();
+//        intent.setAction("com.gusi.ylwylw");
+//        sendOrderedBroadcast(intent, "com.gusi.ylw");
+//        Log.w("Fire", "LockActivity:Broadcast:end");
+        Runtime runtime = Runtime.getRuntime();
+        Log.w(TAG, "Broadcast: " + runtime.maxMemory() + " : " + runtime.totalMemory() +  " : " +runtime.freeMemory()  );
+        mHandler.sendEmptyMessage(0);
+      mHandler.post(new Runnable() {
+          @Override
+          public void run() {
+              Log.w(TAG, "run: 11" );
+          }
+      });
+      mHandler.sendEmptyMessage(2);
     }
+    Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+            Log.w(TAG, "handleMessage: " + msg );
 
+        }
+    };
     public void Broadcast1(View view) {
 
         ContentResolver resolver = getContentResolver();
@@ -241,6 +258,7 @@ public class LockActivity extends BaseActivity {
         });
 
     }
+
 
     public void Ams(View view) {
         try {
@@ -266,7 +284,6 @@ public class LockActivity extends BaseActivity {
                             } catch (RemoteException e) {
                                 Log.e("Fire", "LockActivity:264行:" + name + " : " + e.toString());
                             }
-                            SystemClock.sleep(1);
                         }
                     }
                 }).start();

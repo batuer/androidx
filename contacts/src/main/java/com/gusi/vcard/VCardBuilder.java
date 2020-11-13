@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.android.vcard;
+package com.gusi.vcard;
 
 import android.content.ContentValues;
 import android.provider.ContactsContract.CommonDataKinds.Email;
@@ -34,7 +34,7 @@ import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 
-import com.android.vcard.VCardUtils.PhoneNumberUtilsPort;
+import com.gusi.vcard.VCardUtils.PhoneNumberUtilsPort;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;

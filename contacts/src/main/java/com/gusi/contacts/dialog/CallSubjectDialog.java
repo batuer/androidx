@@ -51,7 +51,7 @@ import com.gusi.contacts.compat.CompatUtils;
 import com.gusi.contacts.compat.PhoneAccountSdkCompat;
 import com.gusi.contacts.compat.telecom.TelecomManagerCompat;
 import com.gusi.contacts.util.UriUtils;
-import com.android.phone.common.animation.AnimUtils;
+import com.gusi.phone.common.animation.AnimUtils;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;

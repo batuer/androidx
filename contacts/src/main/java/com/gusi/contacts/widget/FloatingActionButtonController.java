@@ -26,7 +26,7 @@ import android.widget.ImageButton;
 
 import com.gusi.contacts.R;
 import com.gusi.contacts.util.ViewUtil;
-import com.android.phone.common.animation.AnimUtils;
+import com.gusi.phone.common.animation.AnimUtils;
 
 /**
  * Controls the movement and appearance of the FAB (Floating Action Button).

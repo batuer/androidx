@@ -1,12 +1,14 @@
 package com.gusi.androidx.module.lv;
 
 import android.app.Activity;
-import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.SystemClock;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -17,8 +19,8 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.blankj.utilcode.util.TimeUtils;
 import com.gusi.androidx.R;
+import com.gusi.androidx.module.fragment.FragmentActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,8 +45,47 @@ public class ListViewActivity extends Activity implements AdapterView.OnItemClic
     }
 
     public void addItem(View view) {
-        mItemList.add("Item: " + TimeUtils.getNowMills());
-        mAdapter.notifyDataSetChanged();
+        startActivity(new Intent(this, FragmentActivity.class));
+        for (int i = 0; i < 20; i++) {
+            int finalI = i;
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    Log.i(TAG, "run---: " + finalI);
+                    getWindow().getDecorView().requestLayout();
+                    SystemClock.sleep(1000);
+                    Log.i(TAG, "run===: " + finalI);
+                }
+            });
+        }
+        for (int i = 0; i < 1000; i++) {
+            int finalI = i;
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    getWindow().getDecorView().requestLayout();
+                    Log.i(TAG, "run---**: " + finalI);
+                }
+            });
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.w(TAG, Log.getStackTraceString(new Throwable("onPause")));
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.w(TAG, Log.getStackTraceString(new Throwable("onStop")));
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.w(TAG, Log.getStackTraceString(new Throwable("onDestroy")));
     }
 
     public void removeItem(View view) {
@@ -55,14 +96,20 @@ public class ListViewActivity extends Activity implements AdapterView.OnItemClic
 
     public void dialog(View view) {
 //        new AlertDialog.Builder(Utils.getApp()).setTitle("Title").setMessage("Message").show();
-        Dialog dialog = new MyDialog(this);
-        dialog.setTitle("Title");
-        View inflate = View.inflate(this, R.layout.item, null);
-        TextView textView = inflate.findViewById(R.id.tv_init);
-        textView.setText("Message... ");
-        dialog.setContentView(inflate);
-        dialog.show();
-
+//        Dialog dialog = new MyDialog(this);
+//        dialog.setTitle("Title");
+//        View inflate = View.inflate(this, R.layout.item, null);
+//        TextView textView = inflate.findViewById(R.id.tv_init);
+//        textView.setText("Message... ");
+//        dialog.setContentView(inflate);
+//        dialog.show();
+        Runtime runtime = Runtime.getRuntime();
+        Log.w(TAG, "dialog: " + runtime.maxMemory() + " : " + runtime.totalMemory() + " : " + runtime.freeMemory());
+        try {
+            byte[] bytes = new byte[(int) runtime.maxMemory()];
+        } catch (OutOfMemoryError e) {
+            Log.e(TAG, "dialog: " + e.toString() );
+        }
     }
 
 
@@ -108,26 +155,6 @@ public class ListViewActivity extends Activity implements AdapterView.OnItemClic
                 return convertView;
             }
         };
-    }
-
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        Log.d(TAG, Log.getStackTraceString(new Throwable("Touch")));
-        return super.dispatchTouchEvent(ev);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.e(TAG, "onDestroy: ");
-        Log.d(TAG, Log.getStackTraceString(new Throwable("OnDestroy")));
-    }
-
-    @Override
-    public void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        Log.d(TAG, Log.getStackTraceString(new Throwable("Ylw")));
-        Log.e(TAG, "onDetachedFromWindow: ");
     }
 
     /**

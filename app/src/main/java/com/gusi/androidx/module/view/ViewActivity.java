@@ -2,7 +2,6 @@ package com.gusi.androidx.module.view;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.LoaderManager;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -10,10 +9,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.HandlerThread;
 import android.os.SystemClock;
@@ -21,12 +18,11 @@ import android.provider.CallLog;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 
 import com.gusi.androidx.R;
 import com.gusi.androidx.module.db.CursorAdapter;
@@ -75,47 +71,50 @@ public class ViewActivity extends Activity {
     }
 
     public void query(View view) {
-        getLoaderManager().initLoader(1, null, new LoaderManager.LoaderCallbacks<Cursor>() {
-            @Override
-            public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-                MyCursorLoader cursorLoader = new MyCursorLoader(ViewActivity.this,
-                        Uri.parse("content://com.android.contacts/data"),
-                        new String[]{"data1", "data4", "_id"}, null, null, null);
-                return cursorLoader;
-            }
+        EditText editText = findViewById(R.id.et);
+        editText.setSelection(1, 9);
 
-
-            @RequiresApi(api = Build.VERSION_CODES.M)
-            @Override
-            public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-                mCursor = cursor;
-                mCursorAdapter = new CursorAdapter(ViewActivity.this, cursor) {
-                    @Override
-                    public int getCount() {
-                        return super.getCount();
-                    }
-
-                    @Override
-                    public View newView(Context context, Cursor cursor, ViewGroup parent) {
-                        int item1 = android.R.layout.simple_list_item_1;
-                        View inflate = getLayoutInflater().inflate(item1, parent, false);
-                        return inflate;
-                    }
-
-                    @Override
-                    public void bindView(View view, Context context, Cursor cursor) {
-                        TextView textView = (TextView) view;
-                        textView.setText(cursor.getString(cursor.getColumnIndex("data1")));
-                    }
-                };
-                mListView.setAdapter(mCursorAdapter);
-            }
-
-            @Override
-            public void onLoaderReset(Loader<Cursor> loader) {
-                Log.w("Fire", "ViewActivity:onLoaderReset:" + loader + " , " + mCursor.isClosed());
-            }
-        });
+//        getLoaderManager().initLoader(1, null, new LoaderManager.LoaderCallbacks<Cursor>() {
+//            @Override
+//            public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+//                MyCursorLoader cursorLoader = new MyCursorLoader(ViewActivity.this,
+//                        Uri.parse("content://com.android.contacts/data"),
+//                        new String[]{"data1", "data4", "_id"}, null, null, null);
+//                return cursorLoader;
+//            }
+//
+//
+//            @RequiresApi(api = Build.VERSION_CODES.M)
+//            @Override
+//            public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+//                mCursor = cursor;
+//                mCursorAdapter = new CursorAdapter(ViewActivity.this, cursor) {
+//                    @Override
+//                    public int getCount() {
+//                        return super.getCount();
+//                    }
+//
+//                    @Override
+//                    public View newView(Context context, Cursor cursor, ViewGroup parent) {
+//                        int item1 = android.R.layout.simple_list_item_1;
+//                        View inflate = getLayoutInflater().inflate(item1, parent, false);
+//                        return inflate;
+//                    }
+//
+//                    @Override
+//                    public void bindView(View view, Context context, Cursor cursor) {
+//                        TextView textView = (TextView) view;
+//                        textView.setText(cursor.getString(cursor.getColumnIndex("data1")));
+//                    }
+//                };
+//                mListView.setAdapter(mCursorAdapter);
+//            }
+//
+//            @Override
+//            public void onLoaderReset(Loader<Cursor> loader) {
+//                Log.w("Fire", "ViewActivity:onLoaderReset:" + loader + " , " + mCursor.isClosed());
+//            }
+//        });
     }
 
 

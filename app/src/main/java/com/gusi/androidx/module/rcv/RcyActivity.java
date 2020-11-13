@@ -2,7 +2,6 @@ package com.gusi.androidx.module.rcv;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.gusi.androidx.R;
-import com.gusi.androidx.module.aidl.AidlService;
+import com.gusi.androidx.module.service.MyService;
 
 public class RcyActivity extends AppCompatActivity {
 
@@ -49,16 +48,20 @@ public class RcyActivity extends AppCompatActivity {
     }
 
     public void start(View view) {
-        view.getTag().toString();
-        getMainExecutor().execute(new Runnable() {
-            @Override
-            public void run() {
-                Log.w(TAG, "run: ");
-                SystemClock.sleep(21000);
-                Log.w(TAG, "run: 11");
-            }
-        });
-        startService(new Intent(this, AidlService.class));
+//        getMainExecutor().execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                Log.w(TAG, "run: ");
+//                SystemClock.sleep(21000);
+//                Log.w(TAG, "run: 11");
+//            }
+//        });
+//        startService(new Intent(this, AidlService.class));
+
+        Intent intent = new Intent(this, MyService.class);
+        intent.putExtra("key", "value");
+        MyService.enqueueWork(this, intent);
+        Log.w(TAG, "start: " );
     }
 
 

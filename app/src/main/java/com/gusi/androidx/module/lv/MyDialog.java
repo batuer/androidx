@@ -1,7 +1,9 @@
 package com.gusi.androidx.module.lv;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.MotionEvent;
 
@@ -12,10 +14,17 @@ import androidx.annotation.NonNull;
  * @since 2020/5/29 23:49
  */
 public class MyDialog extends Dialog {
+    private static final String TAG = "Fire_MyDialog";
     Boolean mBoolean;
 
+    @SuppressLint("WrongConstant")
     public MyDialog(@NonNull Context context) {
         super(context);
+        SharedPreferences sharedPreferences = context.getSharedPreferences("",
+                Context.MODE_APPEND);
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+        edit.commit();
+        edit.apply();
 
     }
 
@@ -34,12 +43,14 @@ public class MyDialog extends Dialog {
 
     @Override
     public boolean dispatchTouchEvent(@NonNull MotionEvent ev) {
+        Log.d(TAG, Log.getStackTraceString(new Throwable("Ylw")));
         Log.w("Fire", "MyDialog:27行:" + getCurrentFocus() + " ," + mBoolean);
-        return false;
+        return super.dispatchTouchEvent(ev);
     }
 
     @Override
     public boolean onTouchEvent(@NonNull MotionEvent event) {
-        return false;
+        Log.d(TAG, Log.getStackTraceString(new Throwable("Ylw")));
+        return super.onTouchEvent(event);
     }
 }

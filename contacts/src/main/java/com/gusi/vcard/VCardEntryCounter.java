@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.android.vcard;
+package com.gusi.vcard;
 
 /**
  * The class which just counts the number of vCard entries in the specified input.

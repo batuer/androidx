@@ -46,7 +46,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
-import com.android.common.widget.CompositeCursorAdapter.Partition;
+import com.gusi.common.widget.CompositeCursorAdapter.Partition;
 import com.gusi.contacts.ContactPhotoManager;
 import com.gusi.contacts.logging.ListEvent.ActionType;
 import com.gusi.contacts.logging.Logger;

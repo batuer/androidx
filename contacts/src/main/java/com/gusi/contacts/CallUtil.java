@@ -36,7 +36,7 @@ import com.gusi.contacts.util.PermissionsUtil;
 import com.gusi.contacts.util.PhoneNumberHelper;
 import com.gusi.contactsbind.FeedbackHelper;
 import com.gusi.contactsbind.experiments.Flags;
-import com.android.phone.common.PhoneConstants;
+import com.gusi.phone.common.PhoneConstants;
 
 import java.util.List;
 

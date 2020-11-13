@@ -17,7 +17,7 @@ package com.gusi.contacts.list;
 
 import android.provider.ContactsContract.Directory;
 
-import com.android.common.widget.CompositeCursorAdapter;
+import com.gusi.common.widget.CompositeCursorAdapter;
 
 /**
  * Model object for a {@link Directory} row.

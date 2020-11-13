@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.android.vcard;
+package com.gusi.vcard;
 
 import android.util.Log;
 
-import com.android.vcard.exception.VCardException;
+import com.gusi.vcard.exception.VCardException;
 
 import java.io.IOException;
 import java.util.Set;

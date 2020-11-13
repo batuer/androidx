@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.android.common.widget;
+package com.gusi.common.widget;
 
 import android.content.Context;
 import android.database.ContentObserver;

@@ -2,12 +2,16 @@ package com.gusi.androidx.module.fragment;
 
 import android.database.Cursor;
 import android.database.DataSetObserver;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Ylw
@@ -26,12 +30,16 @@ public class MyAdapter extends BaseAdapter {
     }
 
     public void setCursor(Cursor cursor) {
-//        Cursor olCursor = mCursor;
-//        if (olCursor != null) {
-//            olCursor.unregisterDataSetObserver(mDataSetObserver);
-//        }
+
         mCursor = cursor;
         notifyDataSetChanged();
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mCursor.close();
+                Log.e(TAG, "run: close");
+            }
+        }, 3000);
 //        mCursor.registerDataSetObserver(mDataSetObserver);
     }
 
@@ -41,15 +49,7 @@ public class MyAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        int cursorCount = -3;
-        if (mCursor != null) {
-            cursorCount = mCursor.isClosed() ? -2 : mCursor.getCount();
-        }
-        if (cursorCount == -2) {
-            Log.i(TAG, Log.getStackTraceString(new Throwable()));
-        }
         mI = mCursor != null && !mCursor.isClosed() ? mCursor.getCount() : 0;
-        Log.d("Fire", "MyAdapter:39行:" + mI + " ,cursorCount = " + cursorCount);
         return mI;
     }
 
@@ -65,6 +65,18 @@ public class MyAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        try {
+            convertView = getItemView(position, convertView, parent);
+        } catch (Exception e) {
+//            notifyDataSetInvalidated();
+            notifyDataSetChanged();
+            Log.e(TAG, "getView: " + e.toString() );
+        }
+        return convertView;
+    }
+
+    @NotNull
+    private View getItemView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             convertView = mInflater.inflate(android.R.layout.simple_list_item_1, parent, false);
         }

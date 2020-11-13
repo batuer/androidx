@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.android.vcard.exception;
+package com.gusi.vcard.exception;
 
 /**
  * VCardException thrown when VCard is nested without VCardParser's being notified.

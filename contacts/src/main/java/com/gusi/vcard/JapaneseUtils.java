@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.android.vcard;
+package com.gusi.vcard;
 
 import java.util.HashMap;
 import java.util.Map;

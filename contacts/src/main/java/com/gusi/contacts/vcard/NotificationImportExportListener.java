@@ -33,7 +33,7 @@ import android.widget.Toast;
 
 import com.gusi.contacts.R;
 import com.gusi.contacts.util.ContactsNotificationChannelsUtil;
-import com.android.vcard.VCardEntry;
+import com.gusi.vcard.VCardEntry;
 
 import java.text.NumberFormat;
 

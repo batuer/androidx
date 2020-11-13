@@ -19,6 +19,7 @@ import java.util.Arrays;
  * @since 2020/6/17 22:00
  */
 public class MyCursorLoader extends AsyncTaskLoader<Cursor> {
+    public static boolean DEBUG = false;
     private String TAG = "Fire_MyCursorLoader";
     final ForceLoadContentObserver mObserver;
 
@@ -94,7 +95,9 @@ public class MyCursorLoader extends AsyncTaskLoader<Cursor> {
         }
 
         if (oldCursor != null && oldCursor != cursor && !oldCursor.isClosed()) {
-            Log.i(TAG, "-------deliverResult()-----------" + oldCursor);
+            if (DEBUG) {
+                Log.i(TAG, Log.getStackTraceString(new Throwable("deliverResult")));
+            }
             oldCursor.close();
         }
     }
@@ -106,7 +109,6 @@ public class MyCursorLoader extends AsyncTaskLoader<Cursor> {
      */
     public MyCursorLoader(Context context) {
         super(context);
-        TAG = TAG + "_" + this;
         mObserver = new ForceLoadContentObserver();
     }
 
@@ -135,7 +137,9 @@ public class MyCursorLoader extends AsyncTaskLoader<Cursor> {
             deliverResult(mCursor);
         }
         boolean b = takeContentChanged() || mCursor == null;
-        Log.i(TAG , mCursor+ " :--: " + takeContentChanged());
+        if (DEBUG) {
+            Log.i(TAG, mCursor + " :--: " + b);
+        }
         if (b) {
             forceLoad();
         }
@@ -153,7 +157,9 @@ public class MyCursorLoader extends AsyncTaskLoader<Cursor> {
     @Override
     public void onCanceled(Cursor cursor) {
         if (cursor != null && !cursor.isClosed()) {
-            Log.i(TAG, "-------onCanceled()-----------" + cursor);
+            if (DEBUG) {
+                Log.i(TAG, Log.getStackTraceString(new Throwable("onCanceled")));
+            }
             cursor.close();
         }
     }
@@ -165,7 +171,9 @@ public class MyCursorLoader extends AsyncTaskLoader<Cursor> {
         // Ensure the loader is stopped
         onStopLoading();
         if (mCursor != null && !mCursor.isClosed()) {
-            Log.i(TAG, "-------onReset-----------" + mCursor);
+            if (DEBUG) {
+                Log.i(TAG, Log.getStackTraceString(new Throwable("onReset")));
+            }
             mCursor.close();
         }
         mCursor = null;

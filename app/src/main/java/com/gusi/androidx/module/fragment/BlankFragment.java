@@ -9,13 +9,10 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,6 +22,7 @@ import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 
 import com.gusi.androidx.R;
+import com.gusi.androidx.base.BaseFragment;
 import com.gusi.androidx.module.db.CursorAdapter;
 import com.gusi.androidx.module.view.NameBuilder;
 
@@ -34,8 +32,7 @@ import com.gusi.androidx.module.view.NameBuilder;
  * Use the {@link BlankFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-@RequiresApi(api = Build.VERSION_CODES.M)
-public class BlankFragment extends Fragment {
+public class BlankFragment extends BaseFragment {
     private static final String TAG = "Fire_BlankFragment";
 
     private ListView mListView;
@@ -84,6 +81,7 @@ public class BlankFragment extends Fragment {
         public void onLoaderReset(@NonNull Loader<Cursor> loader) {
         }
     };
+    private Uri mUri;
 
 
     public static BlankFragment newInstance(String from) {
@@ -91,17 +89,21 @@ public class BlankFragment extends Fragment {
         Bundle args = new Bundle();
         args.putString("From", from);
         fragment.setArguments(args);
+        MyCursorLoader.DEBUG = true;
         return fragment;
     }
 
 
-    private String mName;
-    private String nNumber;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_blank, container, false);
+    protected int getLayout() {
+        return R.layout.fragment_blank;
+    }
+
+    @Override
+    protected void initView() {
+        super.initView();
+        View view = getView();
         TextView textView = view.findViewById(R.id.tv_init);
         view.findViewById(R.id.tv_restart).setOnClickListener(v -> restart());
         textView.setOnClickListener(v -> init());
@@ -109,13 +111,11 @@ public class BlankFragment extends Fragment {
             addContact(NameBuilder.build(), NameBuilder.getMobilePhone());
         });
         view.findViewById(R.id.tv_update).setOnClickListener(v -> {
-            update(mName, nNumber);
+            update(NameBuilder.build(), NameBuilder.getMobilePhone());
             mBaseAdapter.notifyDataSetInvalidated();
         });
         view.findViewById(R.id.tv_invalidated).setOnClickListener(v -> {
-            getLoaderManager().destroyLoader(1);
-            getLoaderManager().destroyLoader(2);
-            mBaseAdapter.notifyDataSetInvalidated();
+
         });
         mListView = view.findViewById(R.id.listView);
         new CursorAdapter(getContext(), null) {
@@ -142,7 +142,11 @@ public class BlankFragment extends Fragment {
         mBaseAdapter = new MyAdapter(getLayoutInflater());
 //        mBaseAdapter = new MyCursorAdapter(getActivity(), null);
         mListView.setAdapter(mBaseAdapter);
-        return view;
+    }
+
+    @Override
+    protected void initInject() {
+
     }
 
     private void restart() {
@@ -155,9 +159,6 @@ public class BlankFragment extends Fragment {
     }
 
     public void addContact(String name, String number) {
-        mName = name;
-        nNumber = number;
-
         // 首先向RawContacts.CONTENT_URI执行一个空值插入，目的是获取系统返回的rawContactId
         ContentResolver resolver = getActivity().getContentResolver();
         ContentValues values = new ContentValues();
@@ -167,7 +168,8 @@ public class BlankFragment extends Fragment {
         // 往data表插入姓名数据
         values.clear();
         values.put(ContactsContract.Data.RAW_CONTACT_ID, rawContactId);
-        values.put(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE);// 内容类型
+        values.put(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName
+                .CONTENT_ITEM_TYPE);// 内容类型
         values.put(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME, name);
         resolver.insert(ContactsContract.Data.CONTENT_URI,
                 values);
@@ -178,41 +180,25 @@ public class BlankFragment extends Fragment {
         values.put(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
         values.put(ContactsContract.CommonDataKinds.Phone.NUMBER, number);
         values.put(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE);
-        resolver.insert(ContactsContract.Data.CONTENT_URI,
+        mUri = resolver.insert(ContactsContract.Data.CONTENT_URI,
                 values);
     }
 
     public void update(String name, String number) {
-        Log.w(TAG, "update: "+ getFragmentManager() );
-        Log.w(TAG, "update: " + getChildFragmentManager() );
+//        if (mUri == null) {
+//            return;
+//        }
+//        ContentResolver resolver = getActivity().getContentResolver();
+//        ContentValues values = new ContentValues();
+//        long rawContactId = ContentUris.parseId(mUri);
+//        // 往data表插入电话数据
+//        values.clear();
+//        values.put(ContactsContract.Data.RAW_CONTACT_ID, rawContactId);
+//        values.put(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
+//        values.put(ContactsContract.CommonDataKinds.Phone.NUMBER, "number" + number);
+//        values.put(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE);
+//        resolver.update(ContactsContract.Data.CONTENT_URI, values, null, null);
 
-        if (name == null || number == null) {
-            Toast.makeText(getActivity(), "is null", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        ContentResolver resolver = getActivity().getContentResolver();
-        ContentValues values = new ContentValues();
-        Uri rawContactUri = resolver.insert(
-                ContactsContract.RawContacts.CONTENT_URI, values);
-        long rawContactId = ContentUris.parseId(rawContactUri);
-        // 往data表插入姓名数据
-        values.clear();
-        values.put(ContactsContract.Data.RAW_CONTACT_ID, rawContactId);
-        values.put(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE);// 内容类型
-        values.put(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME, "name:" + name);
-        resolver.insert(ContactsContract.Data.CONTENT_URI,
-                values);
-
-        // 往data表插入电话数据
-        values.clear();
-        values.put(ContactsContract.Data.RAW_CONTACT_ID, rawContactId);
-        values.put(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
-        values.put(ContactsContract.CommonDataKinds.Phone.NUMBER, "number" + number);
-        values.put(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE);
-
-
-        resolver.update(ContactsContract.Data.CONTENT_URI, values, "data2 = ?", null);
     }
-
 
 }

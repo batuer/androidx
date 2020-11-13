@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.android.common.widget;
+package com.gusi.common.widget;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DataSetObservable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -538,6 +539,21 @@ public abstract class CompositeCursorAdapter extends BaseAdapter {
             super.notifyDataSetChanged();
         } else {
             mNotificationNeeded = true;
+        }
+    }
+
+    private class MyDataSetObserver extends DataSetObservable{
+        @Override
+        public void notifyChanged() {
+            super.notifyChanged();
+            notifyDataSetChanged();
+        }
+
+        @Override
+        public void notifyInvalidated() {
+            super.notifyInvalidated();
+            invalidate();
+            notifyDataSetChanged();
         }
     }
 }

@@ -19,7 +19,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.android.common.widget.CompositeCursorAdapter;
+import com.gusi.common.widget.CompositeCursorAdapter;
 
 /**
  * A subclass of {@link CompositeCursorAdapter} that manages pinned partition headers.

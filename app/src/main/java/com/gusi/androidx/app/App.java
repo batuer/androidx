@@ -6,7 +6,10 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Debug;
+import android.os.Looper;
 import android.util.Log;
+import android.util.LogPrinter;
 
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.FragmentManager;
@@ -31,6 +34,10 @@ public class App extends Application {
     private AppComponent mAppComponent;
     private static App sApp;
 
+    public App() {
+        Log.e(TAG, Log.getStackTraceString(new Throwable("")));
+    }
+
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
@@ -40,6 +47,10 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+//        if (LeakCanary.isInAnalyzerProcess(this)) {
+//            return;
+//        }
+//        LeakCanary.install(this);
         Utils.init(this);
         sApp = this;
         initComponent();
@@ -47,8 +58,13 @@ public class App extends Application {
         DBManger.getInstance();
         TooLargeTool.startLogging(this);
         FragmentManager.enableDebugLogging(true);
+        Looper.getMainLooper().setMessageLogging(new LogPrinter(Log.INFO, "Ylw_Androidx"));
         register();
+
+
+//        BaseFragment.DEBUG = true;
 //        getMainLooper().setMessageLogging(new LogPrinter(4, "Ylw"));
+        Debug.startMethodTracing("Ylw");
     }
 
     private int mCount = 0;

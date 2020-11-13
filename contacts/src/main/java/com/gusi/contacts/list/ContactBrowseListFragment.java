@@ -34,7 +34,7 @@ import android.provider.ContactsContract.Directory;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.android.common.widget.CompositeCursorAdapter.Partition;
+import com.gusi.common.widget.CompositeCursorAdapter.Partition;
 import com.gusi.contacts.util.ContactLoaderUtils;
 
 import java.util.List;

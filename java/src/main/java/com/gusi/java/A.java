@@ -5,43 +5,30 @@ package com.gusi.java;
  * @since 2020/5/12 23:10
  */
 public class A {
-    private B b;
-    private int num = -1;
+    private B mB;
+    private C mC;
+
+    public void setB(B b) {
+        mB = b;
+        System.out.println("setB() = " + mB);
+    }
 
     public void test() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (true) {
-                    System.out.println(num + " :====: " + b);
-                }
-            }
-        }).start();
-    }
-//        -1:====:null
-//        -1:====:null
-//        ------------------------------
-//        -1:====:null
-//        -1:====:null
-//        -1:====:null
-//        -1:====:null
-//        -1:====:null
-//        -------------:com.gusi.java.B@2a139a55
-//-1:====:com.gusi.java.B@2a139a55
-//-------------:1
-//        1:====:com.gusi.java.B@2a139a55
-//1:====:com.gusi.java.B@2a139a55
-
-    public void test1() {
-        try {
-            Thread.sleep(1);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        if (mC == null) {
+            mC = new C(mB);
         }
-        System.out.println("------------------------------");
-        b = new B();
-        System.out.println("-------------:" + b);
-        num = 1;
-        System.out.println("-------------:" + num);
+        mC.run();
+    }
+
+    private class C {
+        private B mB;
+
+        public C(B b) {
+            mB = b;
+        }
+
+        public void run() {
+            System.out.println(":--: " + mB);
+        }
     }
 }

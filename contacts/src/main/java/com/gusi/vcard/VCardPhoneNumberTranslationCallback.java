@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.android.vcard;
+package com.gusi.vcard;
 
 /**
  * Callback functionality which can be used with

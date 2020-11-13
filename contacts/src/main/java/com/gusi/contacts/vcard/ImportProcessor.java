@@ -22,17 +22,17 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.gusi.contactsbind.FeedbackHelper;
-import com.android.vcard.VCardEntry;
-import com.android.vcard.VCardEntryCommitter;
-import com.android.vcard.VCardEntryConstructor;
-import com.android.vcard.VCardEntryHandler;
-import com.android.vcard.VCardInterpreter;
-import com.android.vcard.VCardParser;
-import com.android.vcard.VCardParser_V21;
-import com.android.vcard.VCardParser_V30;
-import com.android.vcard.exception.VCardException;
-import com.android.vcard.exception.VCardNotSupportedException;
-import com.android.vcard.exception.VCardVersionException;
+import com.gusi.vcard.VCardEntry;
+import com.gusi.vcard.VCardEntryCommitter;
+import com.gusi.vcard.VCardEntryConstructor;
+import com.gusi.vcard.VCardEntryHandler;
+import com.gusi.vcard.VCardInterpreter;
+import com.gusi.vcard.VCardParser;
+import com.gusi.vcard.VCardParser_V21;
+import com.gusi.vcard.VCardParser_V30;
+import com.gusi.vcard.exception.VCardException;
+import com.gusi.vcard.exception.VCardNotSupportedException;
+import com.gusi.vcard.exception.VCardVersionException;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

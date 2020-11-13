@@ -57,7 +57,7 @@
         android:name="com.gusi.contacts.ContactsApplication"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_contacts_launcher"
-        android:label="@string/applicationLabel"
+        android:label="Gusi"
         android:supportsRtl="true"
         android:taskAffinity="android.task.contacts"
         android:usesCleartextTraffic="false">
@@ -517,7 +517,7 @@
              we don't want this to show up in the Launcher. The priorities of the intent-filters
              are set lower, so that the user does not see a disambig dialog -->
         <activity
-            android:name="com.android.contacts.NonPhoneActivity"
+            android:name="com.gusi.contacts.NonPhoneActivity"
             android:theme="@style/NonPhoneActivityTheme">
             <intent-filter android:priority="-1">
                 <action android:name="android.intent.action.MAIN" />
@@ -544,7 +544,7 @@
         </activity>
 
         <activity
-            android:name="com.android.contacts.dialog.CallSubjectDialog"
+            android:name="com.gusi.contacts.dialog.CallSubjectDialog"
             android:theme="@style/Theme.CallSubjectDialogTheme"
             android:windowSoftInputMode="stateVisible|adjustResize">
             <intent-filter>
@@ -571,7 +571,7 @@
 
         <!-- Service used to run JobScheduler jobs -->
         <service
-            android:name="com.android.contacts.ContactsJobService"
+            android:name="com.gusi.contacts.ContactsJobService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <provider

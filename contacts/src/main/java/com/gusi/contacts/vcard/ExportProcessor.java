@@ -32,8 +32,8 @@ import android.widget.Toast;
 
 import com.gusi.contacts.R;
 import com.gusi.contactsbind.FeedbackHelper;
-import com.android.vcard.VCardComposer;
-import com.android.vcard.VCardConfig;
+import com.gusi.vcard.VCardComposer;
+import com.gusi.vcard.VCardConfig;
 
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;

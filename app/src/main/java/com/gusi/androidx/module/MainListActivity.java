@@ -29,6 +29,9 @@ import java.util.List;
 public class MainListActivity extends ListActivity {
     private static final String TAG = "Fire_MainListActivity";
 
+    public MainListActivity() {
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,7 +47,6 @@ public class MainListActivity extends ListActivity {
             }
         };
         setListAdapter(adapter);
-
     }
 
     @Override

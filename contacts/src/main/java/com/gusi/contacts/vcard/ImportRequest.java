@@ -19,7 +19,7 @@ import android.accounts.Account;
 import android.net.Uri;
 
 import com.gusi.contacts.model.account.AccountWithDataSet;
-import com.android.vcard.VCardSourceDetector;
+import com.gusi.vcard.VCardSourceDetector;
 
 /**
  * Class representing one request for importing vCard (given as a Uri).

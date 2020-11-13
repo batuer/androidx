@@ -1,62 +1,33 @@
 package com.gusi.androidx.module.fragment;
 
 import android.annotation.SuppressLint;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ListView;
 
-import androidx.annotation.RequiresApi;
+import androidx.annotation.Nullable;
 import androidx.core.util.LogWriter;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.gusi.androidx.R;
+import com.gusi.androidx.base.BaseActivity;
 
 import java.io.PrintWriter;
 
-public class FragmentActivity extends androidx.fragment.app.FragmentActivity {
+public class FragmentActivity extends BaseActivity {
 
     private static final String TAG = "Fire_FragmentActivity";
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_fragment);
-//        window.addOnFrameMetricsAvailableListener(new Window.OnFrameMetricsAvailableListener() {
-//            @Override
-//            public void onFrameMetricsAvailable(Window window, FrameMetrics frameMetrics,
-//                                                int dropCountSinceLastInvocation) {
-//
-////                get((ViewGroup) decorView);
-//                Log.e(TAG,
-//                        decorView.isInLayout() + " : " + decorView.isLayoutRequested() + " : " + decorView
-//                                .getDrawingTime());
-//            }
-//        }, new Handler());
-
+    protected int getLayout() {
+        return R.layout.activity_fragment;
     }
 
-    private void get(ViewGroup viewGroup) {
+    @Override
+    protected void initInject() {
 
-        for (int i = 0; i < viewGroup.getChildCount(); i++) {
-            View view = viewGroup.getChildAt(i);
-            if (view instanceof ViewGroup && !(view instanceof ListView)) {
-                get((ViewGroup) view);
-            } else {
-
-                if (view.isInLayout() || view.isLayoutRequested()) {
-                    Log.i(TAG, "isInLayout:" + view.isInLayout() + " :mDrawingTime =  " + view.getDrawingTime() +
-                            " : " + view.toString());
-                } else {
-                    Log.d(TAG, " :mDrawingTime =  " + view.getDrawingTime() + " : " + view.toString());
-                }
-            }
-        }
     }
 
     public void addFragment(View view) {
@@ -65,6 +36,8 @@ public class FragmentActivity extends androidx.fragment.app.FragmentActivity {
         FragmentTransaction transaction = supportFragmentManager.beginTransaction();
         BlankFragment blankFragment = BlankFragment.newInstance("Add");
         transaction.add(R.id.fl_add, blankFragment);
+        TargetFragment targetFragment = TargetFragment.newInstance();
+        transaction.add(R.id.fl_replace, targetFragment);
         transaction.commit();
     }
 
@@ -88,5 +61,23 @@ public class FragmentActivity extends androidx.fragment.app.FragmentActivity {
     public void onBackPressed() {
         super.onBackPressed();
         dump("Ylw", null, new PrintWriter(new LogWriter("Ylw")), null);
+    }
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.w(TAG, Log.getStackTraceString(new Throwable("onCreate")));
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.w(TAG, Log.getStackTraceString(new Throwable("onStart")));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.w(TAG, Log.getStackTraceString(new Throwable("onResume")));
     }
 }

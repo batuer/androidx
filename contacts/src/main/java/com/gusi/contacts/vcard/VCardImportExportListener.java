@@ -19,7 +19,7 @@ package com.gusi.contacts.vcard;
 import android.app.Notification;
 import android.net.Uri;
 
-import com.android.vcard.VCardEntry;
+import com.gusi.vcard.VCardEntry;
 
 interface VCardImportExportListener {
     Notification onImportProcessed(ImportRequest request, int jobId, int sequence);

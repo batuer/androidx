@@ -1,7 +1,10 @@
 package com.gusi.androidx.module.constraintlayout;
 
+import android.os.Bundle;
+import android.os.Debug;
+
+import androidx.annotation.Nullable;
 import androidx.collection.ArrayMap;
-import androidx.constraintlayout.widget.Barrier;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
@@ -24,7 +27,8 @@ public class ConstraintlayoutActivity extends BaseActivity {
     }
 
     @Override
-    protected void initInject() {}
+    protected void initInject() {
+    }
 
     @Override
     protected void initView() {
@@ -40,7 +44,8 @@ public class ConstraintlayoutActivity extends BaseActivity {
         fragmentMap.put("Optimizer", ConstraintFragment.newInstance(R.layout.fragment_constraint_optimzer));
         fragmentMap.put("Barrier", BarrierFragment.newInstance());
         fragmentMap.put("Group", ConstraintFragment.newInstance(R.layout.fragment_constraint_group));
-        fragmentMap.put("Placeholder", ConstraintPlacrholdrFragment.newInstance(R.layout.fragment_constraint_placeholder));
+        fragmentMap.put("Placeholder",
+                ConstraintPlacrholdrFragment.newInstance(R.layout.fragment_constraint_placeholder));
         fragmentMap.put("Guideline", ConstraintFragment.newInstance(R.layout.fragment_constraint_guide));
         fragmentMap.put("Layer", ConstraintLayerFragment.newInstance(R.layout.fragment_constraint_layer));
         fragmentMap.put("CircularReveal", CirclularRevealFragment.Companion.newInstance());
@@ -62,5 +67,17 @@ public class ConstraintlayoutActivity extends BaseActivity {
             }
         });
         mTabLayout.setupWithViewPager(mViewPager);
+    }
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Debug.startMethodTracing("Ylw");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Debug.stopMethodTracing();
     }
 }

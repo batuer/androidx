@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.android.vcard.exception;
+package com.gusi.vcard.exception;
 
 /**
  * Thrown when the vCard has some line starting with '#'. In the specification,

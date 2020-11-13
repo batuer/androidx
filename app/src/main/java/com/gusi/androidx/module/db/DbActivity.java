@@ -3,9 +3,7 @@ package com.gusi.androidx.module.db;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.ContentObserver;
 import android.database.Cursor;
-import android.database.DataSetObserver;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -119,7 +117,7 @@ public class DbActivity extends AppCompatActivity {
         String[] projection = {};
         ContentResolver contentResolver = getContentResolver();
         Cursor cursor = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                new String[]{"display_name", "sort_key", "contact_id", "data1"}, null, null, null);
+                new String[]{"display_name", "sort_key", "contact_id", null}, null, null, null);
         Log.i(TAG, "cursor connect count:" + cursor.getCount());
         Log.w("Fire", "ViewActivity:59行:" + contentResolver);
         // moveToNext方法返回的是一个boolean类型的数据
@@ -164,7 +162,7 @@ public class DbActivity extends AppCompatActivity {
     //CREATE TABLE IF NOT EXISTS "Student" ("_id" INTEGER PRIMARY KEY ,"NAME" TEXT,"BIRTH" TEXT,"SEX" boolean,"AGE"
     // INTEGER,"INTRO" TEXT);
     public void queryStudent(View view) {
-        Cursor cursor = DBManger.getInstance().query("Student", null, null, null, null, null, null, null);
+//        Cursor cursor = DBManger.getInstance().query("Student", null, null, null, null, null, null, null);
 //        mList = new ArrayList<>(cursor.getCount());
 //        while (cursor != null && cursor.moveToNext()) {
 //            long id = cursor.getLong(cursor.getColumnIndex("_id"));
@@ -176,12 +174,11 @@ public class DbActivity extends AppCompatActivity {
 //                    id, name, birth, sex, age);
 //            mList.add(result);
 //        }
-        cursor.close();
-        mBaseAdapter.notifyDataSetChanged();
-        if (mBaseAdapter != null) {
-            mBaseAdapter.notifyDataSetInvalidated();
-        }
-
+//        cursor.close();
+        DBHelper dbHelper = DBManger.getInstance().getDbHelper();
+        dbHelper.close();
+        Cursor cursor = dbHelper.getWritableDatabase().query("Student", null, null, null, null, null, null, null);
+        Log.w(TAG, "queryStudent: " + cursor.getCount());
 
     }
 
@@ -215,58 +212,61 @@ public class DbActivity extends AppCompatActivity {
         ContentResolver resolver = getContentResolver();
         Cursor cursor = resolver.query(Uri.parse("content://com.android.contacts/data"), new String[]{"data1", "data4"
                 , "_id"}, null, null, null);
-        mCursor = cursor;
-        mBaseAdapter.notifyDataSetChanged();
-        cursor.registerDataSetObserver(new DataSetObserver() {
-            @Override
-            public void onChanged() {
-                super.onChanged();
-                // requery
-                Log.d(TAG, Log.getStackTraceString(new Throwable()));
-                Log.w("Fire", "onChanged");
-            }
+        Log.w(TAG, "load: " + cursor.getCount() );
+        cursor.moveToPosition(cursor.getCount() - 1);
 
-            @Override
-            public void onInvalidated() {
-                super.onInvalidated();
-                // close
-                Log.d(TAG, Log.getStackTraceString(new Throwable()));
-                Log.w("Fire", "onInvalidated:" + mCursor.isClosed());
-            }
-        });
-        cursor.registerContentObserver(new ContentObserver(view.getHandler()) {
-            @Override
-            public boolean deliverSelfNotifications() {
-                boolean b = super.deliverSelfNotifications();
-                Log.d(TAG, Log.getStackTraceString(new Throwable()));
-                Log.w("Fire", "deliverSelfNotifications:" + b);
-                return b;
-            }
-
-            @Override
-            public void onChange(boolean selfChange) {
-                super.onChange(selfChange);
-                int cursorCount = -3;
-                if (mCursor != null) {
-                    if (mCursor.isClosed()) {
-                        cursorCount = -2;
-                    } else {
-                        cursorCount = mCursor.getCount();
-                    }
-                }
-                // insert, update, delete
-                Log.d(TAG, Log.getStackTraceString(new Throwable()));
-                Log.w("Fire", "onChange:" + selfChange + " : " + cursorCount);
-            }
-
-            @Override
-            public void onChange(boolean selfChange, Uri uri) {
-                super.onChange(selfChange, uri);
-                // insert, update, delete
-                Log.d(TAG, Log.getStackTraceString(new Throwable()));
-                Log.w("Fire", "onChange:" + selfChange + " : " + uri);
-            }
-        });
+//        mCursor = cursor;
+//        mBaseAdapter.notifyDataSetChanged();
+//        cursor.registerDataSetObserver(new DataSetObserver() {
+//            @Override
+//            public void onChanged() {
+//                super.onChanged();
+//                // requery
+//                Log.d(TAG, Log.getStackTraceString(new Throwable()));
+//                Log.w("Fire", "onChanged");
+//            }
+//
+//            @Override
+//            public void onInvalidated() {
+//                super.onInvalidated();
+//                // close
+//                Log.d(TAG, Log.getStackTraceString(new Throwable()));
+//                Log.w("Fire", "onInvalidated:" + mCursor.isClosed());
+//            }
+//        });
+//        cursor.registerContentObserver(new ContentObserver(view.getHandler()) {
+//            @Override
+//            public boolean deliverSelfNotifications() {
+//                boolean b = super.deliverSelfNotifications();
+//                Log.d(TAG, Log.getStackTraceString(new Throwable()));
+//                Log.w("Fire", "deliverSelfNotifications:" + b);
+//                return b;
+//            }
+//
+//            @Override
+//            public void onChange(boolean selfChange) {
+//                super.onChange(selfChange);
+//                int cursorCount = -3;
+//                if (mCursor != null) {
+//                    if (mCursor.isClosed()) {
+//                        cursorCount = -2;
+//                    } else {
+//                        cursorCount = mCursor.getCount();
+//                    }
+//                }
+//                // insert, update, delete
+//                Log.d(TAG, Log.getStackTraceString(new Throwable()));
+//                Log.w("Fire", "onChange:" + selfChange + " : " + cursorCount);
+//            }
+//
+//            @Override
+//            public void onChange(boolean selfChange, Uri uri) {
+//                super.onChange(selfChange, uri);
+//                // insert, update, delete
+//                Log.d(TAG, Log.getStackTraceString(new Throwable()));
+//                Log.w("Fire", "onChange:" + selfChange + " : " + uri);
+//            }
+//        });
     }
 
     public void fragment(View view) {
@@ -317,7 +317,7 @@ public class DbActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        dump("Ylw",null,new PrintWriter(System.out,true),null);
+        dump("Ylw", null, new PrintWriter(System.out, true), null);
         super.onBackPressed();
     }
 }
