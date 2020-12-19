@@ -63,7 +63,7 @@ public class MyContentProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        Log.w(TAG, "onCreate: " + getContext());
+        Log.w(TAG, "onCreate: " + getContext() +  " : " + this);
         return false;
     }
 

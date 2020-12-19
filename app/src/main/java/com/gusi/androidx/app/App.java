@@ -6,8 +6,8 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Debug;
 import android.os.Looper;
+import android.os.StrictMode;
 import android.util.Log;
 import android.util.LogPrinter;
 
@@ -26,27 +26,35 @@ import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.upgrade.UpgradeStateListener;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 /**
  * @Author ylw  2018/6/20 17:55
  */
 public class App extends Application {
-    private static final String TAG = "App";
+    private static final String TAG = "Fire_App";
     private AppComponent mAppComponent;
     private static App sApp;
 
     public App() {
-        Log.e(TAG, Log.getStackTraceString(new Throwable("")));
+        Log.i(TAG, Log.getStackTraceString(new Throwable("")));
     }
 
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         MultiDex.install(this);
+        Log.w(TAG, "attachBaseContext: " + getBaseContext() + " : " + base);
     }
+
 
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.w(TAG, "onCreate: " + getBaseContext() + " : " + this);
 //        if (LeakCanary.isInAnalyzerProcess(this)) {
 //            return;
 //        }
@@ -59,12 +67,45 @@ public class App extends Application {
         TooLargeTool.startLogging(this);
         FragmentManager.enableDebugLogging(true);
         Looper.getMainLooper().setMessageLogging(new LogPrinter(Log.INFO, "Ylw_Androidx"));
-        register();
+//        register();
 
 
 //        BaseFragment.DEBUG = true;
 //        getMainLooper().setMessageLogging(new LogPrinter(4, "Ylw"));
-        Debug.startMethodTracing("Ylw");
+
+//        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+//                .detectAll()//开启所有的detectXX系列方法
+//                .penaltyDialog()//弹出违规提示框
+//                .penaltyLog()//在Logcat中打印违规日志
+//                .build());
+//        requestDataFromNet();
+        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+                .detectActivityLeaks()//检测Activity泄露
+                .penaltyLog()//在Logcat中打印违规日志
+                .build());
+
+    }
+
+    /**
+     * 请求数据
+     */
+    private void requestDataFromNet() {
+        URL url;
+        try {
+            url = new URL("http://www.baidu.com");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.connect();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String lines;
+            StringBuilder sb = new StringBuilder();
+            while ((lines = reader.readLine()) != null) {
+                sb.append(lines);
+            }
+
+            Log.d("response", sb.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private int mCount = 0;

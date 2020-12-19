@@ -10,29 +10,31 @@ import android.widget.ListView;
  * @since 2020/7/21 22:19
  */
 public class MyLv extends ListView {
-    private static final String TAG = "Fire_MyLv";
+  private static final String TAG = "Fire_MyLv";
 
-    public MyLv(Context context) {
-        super(context);
-    }
+  private byte[] bys = new byte[1024 * 1024 * 30];
 
-    public MyLv(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
+  public MyLv(Context context) {
+    super(context);
+  }
 
-    public MyLv(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
+  public MyLv(Context context, AttributeSet attrs) {
+    super(context, attrs);
+  }
 
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        Log.w(TAG, "onDetachedFromWindow: ");
-    }
+  public MyLv(Context context, AttributeSet attrs, int defStyleAttr) {
+    super(context, attrs, defStyleAttr);
+  }
 
-    @Override
-    public void requestLayout() {
-        super.requestLayout();
+  @Override
+  protected void onDetachedFromWindow() {
+    super.onDetachedFromWindow();
+    Log.w(TAG, "onDetachedFromWindow: ");
+  }
+
+  @Override
+  public void requestLayout() {
+    super.requestLayout();
 //        Log.i(TAG, "requestLayout: ");
-    }
+  }
 }

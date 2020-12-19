@@ -19,7 +19,7 @@
     <uses-permission android:name="android.permission.WRITE_CALL_LOG" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.WRITE_CONTACTS" />
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:name=".app.App"
@@ -30,9 +30,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <provider
+            android:name=".module.provider.MyContentProvider2"
+            android:authorities="com.gusi.provider2"
+            android:enabled="true"
+            android:exported="true"></provider>
+
         <activity
             android:name=".module.anim.AnimActivity"
-            android:label="@string/anim"></activity>
+            android:label="@string/anim" />
         <activity
             android:name=".module.rcv.RcyActivity"
             android:label="@string/rcv" />
@@ -123,7 +129,7 @@
         <service
             android:name=".module.service.MyService"
             android:exported="true"
-            android:permission="android.permission.BIND_JOB_SERVICE"></service>
+            android:permission="android.permission.BIND_JOB_SERVICE" />
     </application>
 
 </manifest>
