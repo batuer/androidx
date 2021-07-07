@@ -1,35 +1,153 @@
 package com.gusi.androidx.app;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Looper;
+import android.os.StrictMode;
+import android.util.Log;
+import android.util.LogPrinter;
 
-import com.blankj.utilcode.util.PermissionUtils;
-import com.blankj.utilcode.util.PhoneUtils;
+import androidx.annotation.RequiresApi;
+import androidx.fragment.app.FragmentManager;
+import androidx.multidex.MultiDex;
+
 import com.blankj.utilcode.util.Utils;
+import com.gu.toolargetool.TooLargeTool;
 import com.gusi.androidx.di.component.AppComponent;
 import com.gusi.androidx.di.component.DaggerAppComponent;
 import com.gusi.androidx.di.module.AppModule;
 import com.gusi.androidx.di.module.HttpModule;
+import com.gusi.androidx.module.db.DBManger;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.upgrade.UpgradeStateListener;
-import com.tencent.bugly.crashreport.CrashReport;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 /**
  * @Author ylw  2018/6/20 17:55
  */
 public class App extends Application {
+    private static final String TAG = "Fire_App";
     private AppComponent mAppComponent;
     private static App sApp;
+
+    public App() {
+        Log.i(TAG, Log.getStackTraceString(new Throwable("")));
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+        Log.w(TAG, "attachBaseContext: " + getBaseContext() + " : " + base);
+    }
+
 
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.w(TAG, "onCreate: " + getBaseContext() + " : " + this);
+//        if (LeakCanary.isInAnalyzerProcess(this)) {
+//            return;
+//        }
+//        LeakCanary.install(this);
         Utils.init(this);
         sApp = this;
         initComponent();
         initBugly();
+        DBManger.getInstance();
+        TooLargeTool.startLogging(this);
+        FragmentManager.enableDebugLogging(true);
+        Looper.getMainLooper().setMessageLogging(new LogPrinter(Log.INFO, "Ylw_Androidx"));
+//        register();
+
+
+//        BaseFragment.DEBUG = true;
+//        getMainLooper().setMessageLogging(new LogPrinter(4, "Ylw"));
+
+//        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+//                .detectAll()//开启所有的detectXX系列方法
+//                .penaltyDialog()//弹出违规提示框
+//                .penaltyLog()//在Logcat中打印违规日志
+//                .build());
+//        requestDataFromNet();
+        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+                .detectActivityLeaks()//检测Activity泄露
+                .penaltyLog()//在Logcat中打印违规日志
+                .build());
+
+    }
+
+    /**
+     * 请求数据
+     */
+    private void requestDataFromNet() {
+        URL url;
+        try {
+            url = new URL("http://www.baidu.com");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.connect();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String lines;
+            StringBuilder sb = new StringBuilder();
+            while ((lines = reader.readLine()) != null) {
+                sb.append(lines);
+            }
+
+            Log.d("response", sb.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private int mCount = 0;
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void register() {
+        registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
+            @Override
+            public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+                Log.w(TAG, (mCount++) + " :onActivityCreated: " + activity);
+            }
+
+            @Override
+            public void onActivityStarted(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivityResumed(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivityPaused(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivityStopped(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+            }
+
+            @Override
+            public void onActivityDestroyed(Activity activity) {
+
+            }
+        });
     }
 
     private void initComponent() {
@@ -50,10 +168,7 @@ public class App extends Application {
         Beta.autoDownloadOnWifi = false;
         Beta.canShowApkInfo = true;
         Bugly.setIsDevelopmentDevice(getApplicationContext(), false);
-        Bugly.init(getApplicationContext(), "40acb59a21", true);
-        if (PermissionUtils.isGranted(Manifest.permission.READ_PHONE_STATE)) {
-            CrashReport.setUserId("IMEI:" + PhoneUtils.getDeviceId());
-        }
+        Bugly.init(getApplicationContext(), "0000000", true);
         //主动检查更新
         Beta.upgradeStateListener = new UpgradeStateListener() {
             @Override

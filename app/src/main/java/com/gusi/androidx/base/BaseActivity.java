@@ -37,6 +37,9 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
     protected P mPresenter;
     private LoadingDialog mLoadingDialog;
 
+    public BaseActivity() {
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

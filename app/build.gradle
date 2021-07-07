@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion rootProject.ext.android["compileSdkVersion"]
@@ -10,12 +12,29 @@ android {
         versionCode 1
         versionName "1.0"
         vectorDrawables.useSupportLibrary = true
+
+        externalNativeBuild {
+            cmake {
+                cppFlags ""
+            }
+        }
+        multiDexEnabled true
+    }
+    signingConfigs {
+        release {
+            storeFile file("sign.jks")
+            storePassword '110119'
+            keyAlias 'gusi'
+            keyPassword '110119'
+        }
     }
     buildTypes {
         debug {
+            signingConfig signingConfigs.release
             buildConfigField 'String', 'BASE_URL', '"http://119.27.187.153/"'
         }
         release {
+            signingConfig signingConfigs.release
             buildConfigField 'String', 'BASE_URL', '"http://119.27.187.153/"'
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -38,10 +57,22 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    externalNativeBuild {
+        cmake {
+            path "src/main/cpp/CMakeLists.txt"
+            version "3.10.2"
+        }
+    }
+    ndkVersion '21.1.6352462'
 }
-
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+//    implementation fileTree(dir: 'libs/leak', include: ['*.jar'])
+//    implementation fileTree(dir: 'libs/leak', include: ['*.aar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation rootProject.ext.dependencies["appcompat"]
     implementation rootProject.ext.dependencies["constraintlayout"]
     implementation rootProject.ext.dependencies["material"]
@@ -57,6 +88,19 @@ dependencies {
     implementation rootProject.ext.dependencies["okhttp"]
     implementation rootProject.ext.dependencies["okhttp_log"]
     implementation rootProject.ext.dependencies["bugly"]
+    implementation rootProject.ext.dependencies["preference"]
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'com.github.bumptech.glide:glide:4.9.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
     annotationProcessor rootProject.ext.dependencies["butterknife-compiler"]
     annotationProcessor rootProject.ext.dependencies["dagger-compiler"]
+    debugCompile 'com.amitshekhar.android:debug-db:1.0.0'
+    implementation 'com.gu.android:toolargetool:0.2.1@aar'
+    implementation 'com.squareup.leakcanary:leakcanary-android:2.4'
+    compile 'com.squareup.leakcanary:leakcanary-android:1.3'
+    implementation 'com.android.support:multidex:1.0.3'
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
 }

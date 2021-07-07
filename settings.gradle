@@ -1,1 +1,3 @@
-include ':app'
+include ':app', ':java'
+//include ':client'
+include ':contacts',':PhoneCommon'

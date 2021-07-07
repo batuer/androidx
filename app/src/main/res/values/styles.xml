@@ -1,11 +1,12 @@
 <resources>
-
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="color_bg">#F8D751</item>
+        <item name="text_bg">AppTheme</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -13,13 +14,32 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
-
     <style name="ToolbarThemeWhite" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="ToolbarThemeBlack.OverFlowMenuTheme" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="text_view_style">
+        <item name="android:layout_width">90dp</item>
+        <item name="android:layout_height">90dp</item>
+        <item name="android:background">#03A9F4</item>
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:textColor">#E2D9DB</item>
+        <item name="android:textSize">30sp</item>
+    </style>
+
+    <style name="theme_default">
+        <item name="color_bg">#807F2DA7</item>
+        <item name="text_bg">theme_default</item>
+    </style>
+
+    <style name="theme_dark">
+        <item name="color_bg">#5180F8</item>
+        <item name="text_bg">theme_dark</item>
+    </style>
+
+    <style name="theme_light">
+        <item name="color_bg">#0fffff</item>
+        <item name="text_bg">theme_light</item>
+    </style>
 </resources>

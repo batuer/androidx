@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
+    <header
+        android:fragment="com.gusi.androidx.module.preference.SettingFragment"
+        android:summary="An example of some preferences."
+        android:title="Pref 1">
+
+    </header>
+    <extra
+        android:name="test"
+        android:value="testvalue" />
+</preference-headers>

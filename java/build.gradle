@@ -1,0 +1,33 @@
+apply plugin: 'java-library'
+apply plugin: 'kotlin'
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+sourceCompatibility = "1.7"
+targetCompatibility = "1.7"
+jar {
+    manifest {
+        attributes 'Main-Class': 'com.gusi.java.YlwClass'
+    }
+}
+task makeJar(type: Copy) {
+    //删除存在的
+    delete 'build/libs/SkSDK.jar'
+    //设置拷贝的文件
+    from('build/intermediates/bundles/release/')
+    //打进jar包后的文件目录
+    into('build/libs/')
+    //将classes.jar放入build/libs/目录下
+    //include ,exclude参数来设置过滤
+    //（我们只关心classes.jar这个文件）
+    include('classes.jar')
+    //指定打包的class
+    include "com/test/**/*.class"
+    //重命名
+    rename ('classes.jar', 'SkSDK.jar')
+}
+makeJar.dependsOn(build)
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
