@@ -8,20 +8,23 @@ import com.gusi.androidx.base.BaseActivity;
  * @since 2019-05-31
  */
 public class MainActivity extends BaseActivity<MainPresenter> implements MainContract.View {
-    @Override
-    protected int getLayout() {
-        return R.layout.activity_main;
-    }
+  private static final String TAG = "Ylw_Main";
 
-    @Override
-    protected void initInject() {
-        getActivityComponent().inject(this);
-    }
+  @Override
+  protected int getLayout() {
+    return R.layout.activity_main;
+  }
 
-    @Override
-    protected void initView() {
-        super.initView();
-        initToolBar(mToolbar, false, "Main");
-    }
+  @Override
+  protected void initInject() {
+    getActivityComponent().inject(this);
+  }
 
+  @Override
+
+  protected void initView() {
+    super.initView();
+    initToolBar(mToolbar, false, "Main");
+
+  }
 }

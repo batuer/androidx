@@ -118,7 +118,9 @@
         <activity
             android:name=".module.lv.ListViewActivity"
             android:label="@string/listView" />
-        <activity android:name=".module.MainListActivity">
+        <activity
+                android:screenOrientation="unspecified"
+                android:name=".module.MainListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
