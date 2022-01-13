@@ -7,9 +7,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Looper;
 import android.os.Process;
-import android.os.StrictMode;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -80,22 +78,31 @@ public class App extends Application {
 //                .penaltyLog()//在Logcat中打印违规日志
 //                .build());
 //        requestDataFromNet();
-    StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-        .detectActivityLeaks()//检测Activity泄露
-        .penaltyLog()//在Logcat中打印违规日志
-        .build());
+//    StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+//        .detectActivityLeaks()//检测Activity泄露
+//        .penaltyLog()//在Logcat中打印违规日志
+//        .build());
 
     Log.i(TAG, "initView: " + Process.myUid() + " : " + Thread.currentThread().getName());
 
-    try {
-      Looper looper = Looper.getMainLooper();
-      Class<? extends Looper> aClass = looper.getClass();
+//    try {
+//      Looper looper = Looper.getMainLooper();
+//      Class<? extends Looper> aClass = looper.getClass();
+//
+//      Method method = aClass.getDeclaredMethod("setSlowLogThresholdMs", long.class, long.class);
+//      Object invoke = method.invoke(looper, 30, 30);
+//      Log.i(TAG, "initView: " + method + " : " + invoke);
+//    } catch (Exception e) {
+//      Log.e(TAG, "initView: ", e);
+//    }
 
-      Method method = aClass.getDeclaredMethod("setSlowLogThresholdMs", long.class, long.class);
-      Object invoke = method.invoke(looper, 100, 100);
-      Log.i(TAG, "initView: " + method + " : " + invoke);
+
+    try {
+      Class<?> aClass = Class.forName("android.net.netstats.provider.NetworkStatsProvider", true, ClassLoader.getSystemClassLoader());
+      Method getProviderBinder = aClass.getDeclaredMethod("getProviderBinder");
+      Log.i(TAG, "onCreate: " + aClass + " : " + getProviderBinder);
     } catch (Exception e) {
-      Log.e(TAG, "initView: ", e);
+      Log.e(TAG, "onCreate: ", e);
     }
 
   }

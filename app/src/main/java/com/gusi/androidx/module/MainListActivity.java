@@ -15,6 +15,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import com.blankj.utilcode.util.PermissionUtils;
+import com.gusi.androidx.module.service.RecordCallService;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,26 +47,11 @@ public class MainListActivity extends ListActivity {
       }
     };
     setListAdapter(adapter);
-//    start();
-    test1();
-  }
-
-  private void start() {
-//    new Thread(() -> {
-//      test();
-//    }).start();
-  }
-
-  private void test() {
-    test1();
-    start();
-  }
-
-  private void test1() {
-    long start = System.currentTimeMillis();
-    while ((System.currentTimeMillis() - start) < 2000) {
-      System.out.println("--Ylw-:" + System.currentTimeMillis());
+    String[] permissions = PermissionUtils.getPermissions().toArray(new String[0]);
+    if (!PermissionUtils.isGranted(permissions)) {
+      PermissionUtils.permission(permissions).request();
     }
+    startService(new Intent(this, RecordCallService.class));
   }
 
 
