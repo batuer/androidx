@@ -4,6 +4,7 @@ import android.animation.TimeInterpolator;
 import android.animation.ValueAnimator;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -20,6 +21,13 @@ public class AnimActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_anim);
         mView = findViewById(R.id.view);
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        boolean b = super.dispatchTouchEvent(ev);
+        Log.i(TAG, "dispatchTouchEvent: ");
+        return b;
     }
 
     public void startValueAnim(View view) {

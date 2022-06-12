@@ -12,7 +12,7 @@ import com.gusi.androidx.module.db.DBHelper;
 import com.gusi.androidx.module.db.DBManger;
 
 public class MyContentProvider extends ContentProvider {
-    private static final String TAG = "Fire_Provider";
+    private static final String TAG = "Ylw_Provider";
 
     public static final String AUTHORITY = "com.gusi.provider";
 
@@ -50,7 +50,8 @@ public class MyContentProvider extends ContentProvider {
         // 该方法在最下面
         String table = getTableName(uri);
         // 向该表添加数据
-        DBManger.getInstance().getWritableDatabase().insert(table, null, values);
+        long insert = DBManger.getInstance().getWritableDatabase().insert(table, null, values);
+        Log.i(TAG, "insert: "+ insert);
         // 当该URI的ContentProvider数据发生变化时，通知外界（即访问该ContentProvider数据的访问者）
         getContext().getContentResolver().notifyChange(uri, null);
 
@@ -64,6 +65,7 @@ public class MyContentProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
         Log.w(TAG, "onCreate: " + getContext() +  " : " + this);
+
         return false;
     }
 

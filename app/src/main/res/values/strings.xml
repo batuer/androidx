@@ -30,6 +30,7 @@
     <string name="jni">jni</string>
     <string name="fragment">fragment</string>
     <string name="anim">anim</string>
+    <string name="reflect">reflect</string>
     <string name="rcv">rcv</string>
     <string name="preference">preference</string>
     <string name="preference_fragment">preference_fragment</string>
@@ -38,6 +39,7 @@
     <string name="flag">flag</string>
     <string name="view">view</string>
     <string name="qqlogin">QQLogin</string>
+    <string name="net">net</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

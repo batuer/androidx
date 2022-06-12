@@ -22,6 +22,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="Ylw_broadcast_permission" />
 
     <application
             android:name=".app.App"
@@ -32,12 +33,18 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             android:usesCleartextTraffic="true">
-        <provider
-                android:name=".module.provider.MyContentProvider2"
-                android:authorities="com.gusi.provider2"
-                android:enabled="true"
-                android:exported="true"></provider>
-
+        <activity
+                android:label="@string/net"
+                android:name=".module.internet.NetActivity"
+                android:exported="true" />
+        <activity
+                android:name=".reflect.ReflectActivity"
+                android:exported="true"
+                android:label="@string/reflect" /> <!-- <provider -->
+        <!-- android:name=".module.provider.MyContentProvider2" -->
+        <!-- android:authorities="com.gusi.provider2" -->
+        <!-- android:enabled="true" -->
+        <!-- android:exported="true" /> -->
         <activity
                 android:name=".module.anim.AnimActivity"
                 android:label="@string/anim" />
@@ -48,7 +55,6 @@
         <provider
                 android:name=".module.provider.MyContentProvider"
                 android:authorities="com.gusi.provider"
-                android:enabled="true"
                 android:exported="true" />
 
         <activity
@@ -121,8 +127,8 @@
                 android:name=".module.lv.ListViewActivity"
                 android:label="@string/listView" />
         <activity
-                android:screenOrientation="unspecified"
-                android:name=".module.MainListActivity">
+                android:name=".module.MainListActivity"
+                android:screenOrientation="unspecified">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
