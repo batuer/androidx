@@ -1,4 +1,4 @@
-package com.gusi.androidx.module.internet;
+package com.gusi.androidx.module.net;
 
 import java.io.Serializable;
 
@@ -56,5 +56,16 @@ public class HotKey implements Serializable {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  @Override
+  public String toString() {
+    return "HotKey{" +
+        "id=" + id +
+        ", order=" + order +
+        ", visible=" + visible +
+        ", link='" + link + '\'' +
+        ", name='" + name + '\'' +
+        '}';
   }
 }

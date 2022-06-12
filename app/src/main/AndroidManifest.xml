@@ -35,7 +35,7 @@
             android:usesCleartextTraffic="true">
         <activity
                 android:label="@string/net"
-                android:name=".module.internet.NetActivity"
+                android:name=".module.net.NetActivity"
                 android:exported="true" />
         <activity
                 android:name=".reflect.ReflectActivity"

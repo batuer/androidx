@@ -5,7 +5,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".module.internet.NetActivity">
+        tools:context=".module.net.NetActivity">
 
     <Button
             android:text="urlConnectionGet"
@@ -16,6 +16,12 @@
     <Button
             android:text="urlConnectionPost"
             android:onClick="urlConnectionPost"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    <Button
+            android:text="login"
+            android:onClick="login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
