@@ -31,6 +31,7 @@
     <string name="fragment">fragment</string>
     <string name="anim">anim</string>
     <string name="reflect">reflect</string>
+    <string name="camera">camera</string>
     <string name="rcv">rcv</string>
     <string name="preference">preference</string>
     <string name="preference_fragment">preference_fragment</string>
