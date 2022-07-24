@@ -25,6 +25,5 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
   protected void initView() {
     super.initView();
     initToolBar(mToolbar, false, "Main");
-
   }
 }

@@ -37,10 +37,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+
+        <provider
+            android:name=".provider.AndroidxProvider"
+            android:authorities="com.gusi.androidx.provider"
+            android:enabled="true"
+            android:exported="true" />
+
         <service
             android:name=".module.camera.TakePhotoBackgroundService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
 
         <activity
             android:name=".module.camera.CameraActivity"

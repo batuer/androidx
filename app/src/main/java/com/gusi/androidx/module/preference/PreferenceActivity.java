@@ -53,7 +53,7 @@ public class PreferenceActivity extends android.preference.PreferenceActivity im
 
     @Override
     public void onBackPressed() {
-//        super.onBackPressed();
+        super.onBackPressed();
         Dialog dialog = getPreferenceScreen().getDialog();
         Log.w("Fire", "PreferenceActivity:58行:" + dialog);
     }

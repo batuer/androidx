@@ -89,17 +89,27 @@ public class RecordCallService extends Service {
     }
 
     private void startRecord() {
-        if (recorder != null) {
-            recorder.start(); //接听的时候开始录音
+        try {
+            if (recorder != null) {
+                recorder.start(); //接听的时候开始录音
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "startRecord: ", e);
         }
+
     }
 
     private void stopRecord() {
-        if (recorder != null) {
-            recorder.stop();//停止录音
-            recorder.release();//释放资源
-            recorder = null;
+        try {
+            if (recorder != null) {
+                recorder.stop();//停止录音
+                recorder.release();//释放资源
+                recorder = null;
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "stopRecord: ", e);
         }
+
     }
 
     private void prepareRecord() {
@@ -109,16 +119,18 @@ public class RecordCallService extends Service {
             recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);//设置音频格式(3gp)
             createRecorderFile();//创建保存录音的文件夹
             try {
-                String path = "sdcard/recorder" + "/" + getCurrentTime() + ".3gp";
-                File file = new File(path);
+                String path = getCurrentTime() + ".3gp";
+                File file = new File(getCacheDir(), path);
                 if (!file.exists()) {
                     file.createNewFile();
                 }
+                Log.i(TAG, "prepareRecord: " + file);
                 recorder.setOutputFile(path); //设置录音保存的文件
                 recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);//设置音频编码
                 recorder.prepare();//准备录音
             } catch (IOException e) {
                 Log.e(TAG, "onCallStateChanged: ", e);
+                recorder = null;
             }
         }
     }
