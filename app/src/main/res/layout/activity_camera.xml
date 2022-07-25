@@ -13,4 +13,10 @@
         android:onClick="takePhoto"
         android:text="takePhoto" />
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="gson"
+        android:text="gson" />
+
 </LinearLayout>
